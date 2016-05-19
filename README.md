@@ -27,24 +27,16 @@ field of machine learning in the last ~30 years.
 Cover:
 
 1. MLC++: http://ai.stanford.edu/~ronnyk/mlcj.pdf (1994)
-* scikit-learn: http://dl.acm.org/citation.cfm?id=2078195 (2007)
-* pattern: https://github.com/clips/pattern,
+2. OpenCV: http://opencv.org (2000)
+3. scikit-learn: http://dl.acm.org/citation.cfm?id=2078195 (2007)
+4. Accord.NET: https://github.com/accord-net/framework (2008)
+5. MOA: http://jmlr.csail.mit.edu/proceedings/papers/v11/bifet10a/bifet10a.pdf
+   (2010)
+6. Mahout: http://mahout.apache.org 2011
+8. pattern: https://github.com/clips/pattern,
   http://www.jmlr.org/papers/volume13/desmedt12a/desmedt12a.pdf (2012)
-* pybrain: https://github.com/clips/pattern (2010)
-* spark mllib: http://spark.apache.org/mllib,
+9. spark mllib: http://spark.apache.org/mllib,
   http://arxiv.org/pdf/1505.06807v1.pdf (2015)
-* MOA: http://jmlr.csail.mit.edu/proceedings/papers/v11/bifet10a/bifet10a.pdf (2010)
-* Dlib-ML: http://www.jmlr.org/papers/volume10/king09a/king09a.pdf (2009)
-* MLPack: http://mlpack.org,
-  http://www.jmlr.org/papers/volume14/curtin13a/curtin13a.pdf (2013)
-* OpenCV: http://opencv.org (2000)
-* H2O: http://www.h2o.ai (2011)
-* MS ML Studio:
-  https://azure.microsoft.com/en-us/documentation/articles/machine-learning-what-is-ml-studio/ (2014)
-* Oracle Data Mining:
-  http://www.oracle.com/technetwork/database/options/advanced-analytics/odm/overview/index.html (2002)
-* Accord.NET: https://github.com/accord-net/framework (2008)
-
 ### 2.2 Focus on Deep Learning Toolkits
 
 Note that this should be a brief listing and history of these frameworks,
@@ -52,15 +44,15 @@ Note that this should be a brief listing and history of these frameworks,
 
 Deep Learning or NN?
 
-* Theano: http://arxiv.org/pdf/1605.02688.pdf (2010)
-* Caffe: http://arxiv.org/abs/1408.5093 (2010)
+* Theano: http://arxiv.org/pdf/1605.02688.pdf (2008)
+* Caffe: http://arxiv.org/abs/1408.5093 (2014)
 * Torch: http://publications.idiap.ch/downloads/reports/2002/rr02-46.pdf (2002)
 * DL4J: (2014)
 * Lasagne: https://github.com/Lasagne/Lasagne (2014)
 * CuDNN: https://developer.nvidia.com/cudnn
   https://developer.nvidia.com/deep-learning-software (2014)
 * Nervana NeOn: http://www.nervanasys.com (2014)
-* cuda-convent: https://code.google.com/p/cuda-convnet/ (2014)
+* cuda-convnet: https://code.google.com/p/cuda-convnet/ (2014)
 
 ## 3. TensorFlow: Interface
 
@@ -136,6 +128,7 @@ graphs, Torch is imperative while TensorFlow is declarative etc.
 Speak to Benchmarks:
 
 http://arxiv.org/abs/1511.06435v3
+http://arxiv.org/pdf/1605.02688v1.pdfA
 
 ## 6
 

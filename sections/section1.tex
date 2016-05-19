@@ -1,19 +1,152 @@
-
-\section{History of Machine Learning Frameworks}
+\section{History of Machine Learning Libraries}
 
 In this section, we aim to give a brief overview and key milestones in the
-history of machine-learning programming frameworks and libraries. We begin with
-a review of past and existing libraries suitable for a wide range of
-machine-learning and statistical analysis purposes, reaching back as far as 30
-years ago. We then provide a more focused review of recent programming
-frameworks suited especially to the task of deep learning, thus listing and
-describing a handful of current competitors of TensorFlow.
+history of machine-learning software libraries. We begin with a review of
+libraries suitable for a wide range of machine-learning and data-analysis
+purposes, reaching back more than 20 years. We then provide a more focused
+review of recent programming frameworks suited especially to the task of deep
+learning. We wish to emphasize that this section does in no way compare or even
+mention TensorFlow, as we have dedicated Section IV for this specific purpose.
 
 \subsection{General Machine Learning}
 
+In the following paragraphs we aim to list and briefly review a small set of
+\emph{general machine-learning libraries} in chronological order. With
+\emph{general}, we mean to describe any particular library whose common
+use-cases in the machine-learning and data-science community include \emph{but
+  are not limited to} deep-learning. As such, these libraries may be used for
+statistical analysis, clustering, dimensionality reduction, structured
+prediction, anomaly detection, shallow (as opposed to deep) neural networks and
+other interests.
+
+We begin our review with a library released 21 years before TensorFlow:
+\emph{MLC++} \cite{mlcpp}. MLC++ is a software library developed in the C++
+programming language providing algorithms alongside a comparison-framework for a
+number of of data-mining, statistical analysis as well as pattern-recognition
+techniques. It was originally developed at Stanford University in 1994 and is
+now owned and maintained by Silicon Graphics, Inc
+(SGI\footnote{https://www.sgi.com/tech/mlc/}). To the best of our knowledge,
+MLC++ is the oldest machine-learning library available today.
+
+Following MLC++ in the chronological order,
+\emph{OpenCV}\footnote{http://opencv.org} (\textbf{Open}
+\textbf{C}omputer-\textbf{V}ision) was released in the year 2000 by Bradski et
+al. \cite{opencv}. It is aimed primarily at solving learning-tasks in the field
+of computer-vision and image-recognition, including a collection of algorithms
+for face-recognition, object-identifcation, 3D-model extraction and other
+purposes. It released under a BSD-license and provides interfaces in multiple
+programming languages such as C++, Python, MATLAB, among others.
+
+Another machine-learning library we wish to mention is
+\emph{scikit-learn}\footnote{http://scikit-learn.org/stable/} \cite{scikit}. The
+scikit-learn project was originally developed by David Cournapeu as part of the
+Google Summer of Code program\footnote{https://summerofcode.withgoogle.com} in
+2008. It is an open-source machine-learning library written in Python, on top of
+the NumPy, SciPy and matplotlib Python-libraries and useful for a large class of
+both supervised and unsupervised learning problems.
+
+The \emph{Accord.NET}\footnote{http://accord-framework.net/index.html} library
+stands apart from the aforementioned examples in that it is written in the C\#
+(``C-Sharp'') programming language. Released in 2008, it is composed not only of
+a variety of machine-learning algorithms, but also signal-processing modules for
+speech and image recognition \cite{accord}.
+
+\emph{Massive Online Analysis}\footnote{http://moa.cms.waikato.ac.nz} (MOA) is
+an open-source framework for online and offline analysis of massive, potentially
+infinite, data-\emph{streams}. MOA includes a variety of tools for
+classification, regression, recommender systems and further domains. It is
+written in the Java programming language and is maintained by staff of the
+University of Waikato, New Zealand. It was conveived in 2010 \cite{moa}.
+
+The \emph{Mahout}\footnote{http://mahout.apache.org} project, part of Apache
+Software Foundation\footnote{http://www.apache.org}, is a Java programming
+environment for scalable machine-learning applications, built on top of the
+Apache Hadoop\footnote{http://hadoop.apache.org} platform. It allows for
+analysis of large datasets distributed in the Hadoop Distributed File System
+(HDFS) using the \emph{MapReduce} programming paradigm and includes
+machine-learning algorithms for classification, clustering and filtering.
+
+\emph{Pattern}\footnote{http://www.clips.ua.ac.be/pages/pattern} is a Python
+machine-learning module we include in our list due to its rich set of
+\emph{web-mining} facilities. It includes not only general machine learning
+algorithms (e.g. clustering, classification or nearest-neighbour search) and
+natural language processsing methods (e.g. n-gram search or sentiment analysis),
+but also a web-crawler that can, for example, fetch Tweets and Wikipedia
+entries, facilitating quick data-analysis on these sources. It was published by
+the University of Antwerp in 2012 and is open-source.
+
+Lastly, \emph{Spark MLlib}\footnote{http://spark.apache.org/mllib} is an
+open-source machine-learning and data-analysis platform released in 2015 and
+built on top of the Apache Spark\footnote{http://spark.apache.org/} project
+\cite{spark}, a fast cluster-computing system. Similar to Apache Mahout, it aims
+to support processing of large-scale \emph{distributed} datasets and training of
+machine-learning models across a cluster of commodity hardware. For this, it
+includes classification, regression, clustering and other machine-learniing
+algorithms \cite{mllib}.
+
 \subsection{Deep Learning}
+
+While the software libraries mentioned in the previous section are useful for a
+great variety of different machine-learning and statistical analysis tasks, the
+following paragraphs list software frameworks especially effective in training
+deep-learning models.
+
+The first and oldest framework in our list suited to the development and
+training of deep neural networks is \emph{Torch}\footnote{http://torch.ch},
+released already in 2002 \cite{torch}. Torch consisted originally of a pure C++
+implementation and interface. Today, its core is implemented in C/CUDA while it
+exposes an interface in the Lua\footnote{https://www.lua.org} scripting
+language. For this, Torch makes use of a LuaJIT (just-in-time) compiler to
+connect Lua routines to the underlying C implementations. It includes, inter
+alia, numerical optimization routines, neural network models as well as
+general-purpose n-dimensional array (tensor) objects.
+
+\emph{Theano}\footnote{http://deeplearning.net/software/theano/}, released in
+2008 \cite{theano}, is another noteworthy deep-learning library. We note that
+while Theano enjoys greatest popularity among the machine-learning community, it
+is, in essence, not a machine-learning library at all. Rather, it is a
+programming framework that allows users to declare mathematical expressions
+\emph{symbolically}, as computational graphs wich may be optimized, eventually
+compiled and finally executed in a fast and efficient manner on either CPU or
+GPU devices. As such, \cite{theano} labels Theano a ``mathematical compiler''.
+
+\emph{Caffe}\footnote{http://caffe.berkeleyvision.org} is an open-source
+deep-learning library maintained by the Berkely Vision and Learning Center
+(BVLC), released in 2014 under a BSD-License \cite{caffe}. It is implemented in
+C++ and uses neural-network layers as its basic computational building blocks
+(as opposed to Theano and others, where the user must define individual
+mathematical operations making up layers). A deep-learning model, consisting of
+many such layers, is stored in the Google Protocol Buffer data-representation
+format. While models may manually be defined in this Protocol Buffer
+``language'', there exist bindings to Python and MATLAB to generate them
+programmatically. Caffe is especially well suited to the development and
+training of \emph{convolutional neural networks} (CNNs or ConvNets), used
+extensively in the domain of image-recognition.
+
+While the aforementioned machine-learning frameworks allowed for the definition
+of deep-learning models in Python, MATLAB and Lua, the
+\emph{Deeplearning4J}\footnote{http://deeplearning4j.org} (DL4J) library enables
+also the Java programmer to create deep neural-networks. DL4J includes
+functionality to create Restricted Boltzmann machines, convolutional and
+recurrent neural networks, deep belief networks and other types of deep-learning
+models. Moreover, DL4J enables horizontal scalabality using distributed
+computing platforms such as Apache Hadoop or Spark. It was released in 2014 by
+Adam Gibson, under an Apache 2.0 open-source license.
+
+Lastly, we add the NVIDIA Deep Learning
+SDK\footnote{https://developer.nvidia.com/deep-learning-software} to to this
+list. Its main goal is to maximize the perfomance of deep-learning algorithms on
+(NVIDIA) graphical-processing-units (GPUs). The SDK consists of three core
+modules. The first, \emph{cuDNN}, provides high-performance GPU implementations
+for deep-learning algorithms such as convolutions, activations functions and
+tensor transformations. The second is a linear-algebra library, \emph{cuBLAS},
+enabling GPU-accelerated mathematical operations on n-dimensional
+arrays. Lastly, \emph{cuSPARSE} includes a set of routines for \emph{sparse}
+matrices tuned for high efficiency on GPUs. While programming may be done in
+these libraries directly, there exist also bindings to other deep-learning
+libraries, such as Torch\footnote{https://github.com/soumith/cudnn.torch}.
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: "paper"
+%%% TeX-master: "../paper"
 %%% End:
