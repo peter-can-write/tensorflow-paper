@@ -1,0 +1,60 @@
+\section{Introduction}
+
+Modern artificial-intelligence systems and machine-learning algorithms have
+revolutionized approaches to a myriad of scientific and technological challenges
+in a variety of fields. We can observe an immense proliferation in the quality
+of state-of-the-art computer-vision and image-recognition, natural language
+processing, speech recognition and other techniques. However, the major and most
+obvious benefactor of this revolution is mankind itself. Personalized digital
+assistants, recommendations on e-commerce platforms, financial fraud detection,
+customized web-search results and social-network feeds as well as novel
+breakthroughs in genomics have all been improved, if not enabled, by current
+machine learning methods.
+
+A particular branch of machine-learning, \emph{deep-learning}, has proven
+especially effective in recent years. Deep-learning may be defined as a family
+of representation-learning algorithms employing complex neural-network
+architectures with a high number of hidden layers, each composed of simple but
+non-linear transformations to the input data. Given enough such transformation
+modules, very complex functions may be modeled to solve classification,
+regression, transcription and numberous other learning tasks \cite{nature2015}.
+
+It is noteworthy that the rise in popularity of deep-learning can be traced back
+to only the last few years, enabled primarily by the discovery of new algorithms
+such as the \emph{rectified linear unit} (ReLU) \cite{relu} activation function
+or \emph{dropout} as a regularization technique \cite{dropout}; the greater
+availability of large data-sets, containing more training examples and lastly
+the efficient use of graphical processing units (GPUs) and massively parallel
+commodity hardware to train deep-learning models on these equally massive
+data-sets \cite{nature2015, rampasek}.
+
+While deep-learning algorithms and individual architectural components such as
+representation transformations, activation functions or regularization methods
+may initially be expressed in mathematical notation, they must eventually be
+transcribed into a computer program for real-world usage. For this purpose,
+there exist a number of open-source as well as commercial machine-learning
+software libraries and frameworks. Among these are Theano \cite{theano}, Torch
+\cite{torch}, scikit-learn \cite{scikit} and many more, which we review in
+further detail in Section II of this paper. In November 2015, this list was
+extended by \emph{TensorFlow}, a novel machine-learning software library
+released by Google \cite{tensorflow}. As per the initial publication, TensorFlow
+aims to be ``an interface for expressing machine learning algorithms'' in
+``large-scale [\dots] on heterogenous distributed systems'' \cite{tensorflow}.
+
+The remainder of this paper aims to give a thorough review of TensorFlow and put
+it in context of the current state of machine-learning. In detail, the paper is
+further structured as follow. Section I will provide a brief overview and
+history of machine-learning software libraries, listing but not comparing
+projects similar to TensorFlow. Subsequently, Section II will discuss in depth
+the computational paradigms underlying TensorFlow. Section III will then move to
+explaining the current implementation's programming interface in the various
+programming languages supported. In the following, Section IV provides a
+qualitative as well as quantitative comparision of TensorFlow and other
+\emph{deep-learning} libraries. Before concluding our review in Section VI, we
+also examine current real-world use-cases of and experiences with TensorFlow in
+Section V.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "paper"
+%%% End:
