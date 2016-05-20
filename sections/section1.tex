@@ -5,8 +5,9 @@ history of machine-learning software libraries. We begin with a review of
 libraries suitable for a wide range of machine-learning and data-analysis
 purposes, reaching back more than 20 years. We then provide a more focused
 review of recent programming frameworks suited especially to the task of deep
-learning. We wish to emphasize that this section does in no way compare or even
-mention TensorFlow, as we have dedicated Section IV for this specific purpose.
+learning. Figure \ref{fig:timeline} visualized this section in a timeline. We
+wish to emphasize that this section does in no way compare TensorFlow, as we
+have dedicated Section IV for this specific purpose.
 
 \subsection{General Machine Learning}
 
@@ -33,7 +34,7 @@ Following MLC++ in the chronological order,
 \textbf{C}omputer-\textbf{V}ision) was released in the year 2000 by Bradski et
 al. \cite{opencv}. It is aimed primarily at solving learning-tasks in the field
 of computer-vision and image-recognition, including a collection of algorithms
-for face-recognition, object-identifcation, 3D-model extraction and other
+for face-recognition, object-identification, 3D-model extraction and other
 purposes. It released under a BSD-license and provides interfaces in multiple
 programming languages such as C++, Python, MATLAB, among others.
 
@@ -56,7 +57,7 @@ an open-source framework for online and offline analysis of massive, potentially
 infinite, data-\emph{streams}. MOA includes a variety of tools for
 classification, regression, recommender systems and further domains. It is
 written in the Java programming language and is maintained by staff of the
-University of Waikato, New Zealand. It was conveived in 2010 \cite{moa}.
+University of Waikato, New Zealand. It was conceived in 2010 \cite{moa}.
 
 The \emph{Mahout}\footnote{http://mahout.apache.org} project, part of Apache
 Software Foundation\footnote{http://www.apache.org}, is a Java programming
@@ -69,8 +70,8 @@ machine-learning algorithms for classification, clustering and filtering.
 \emph{Pattern}\footnote{http://www.clips.ua.ac.be/pages/pattern} is a Python
 machine-learning module we include in our list due to its rich set of
 \emph{web-mining} facilities. It includes not only general machine learning
-algorithms (e.g. clustering, classification or nearest-neighbour search) and
-natural language processsing methods (e.g. n-gram search or sentiment analysis),
+algorithms (e.g. clustering, classification or nearest-neighbor search) and
+natural language processing methods (e.g. n-gram search or sentiment analysis),
 but also a web-crawler that can, for example, fetch Tweets and Wikipedia
 entries, facilitating quick data-analysis on these sources. It was published by
 the University of Antwerp in 2012 and is open-source.
@@ -81,8 +82,48 @@ built on top of the Apache Spark\footnote{http://spark.apache.org/} project
 \cite{spark}, a fast cluster-computing system. Similar to Apache Mahout, it aims
 to support processing of large-scale \emph{distributed} datasets and training of
 machine-learning models across a cluster of commodity hardware. For this, it
-includes classification, regression, clustering and other machine-learniing
+includes classification, regression, clustering and other machine-learning
 algorithms \cite{mllib}.
+
+\begin{figure*}[t!]
+\centering
+  \begin{tikzpicture}
+  \draw [thick, ->] (0, 0) -- (13, 0);
+
+  \newcounter{y}
+  \setcounter{y}{1992}
+  \foreach \i in {0, ..., 12} {
+    \draw (\i, {(Mod(\i, 2) - 0.5)/1.5}) node {\they};
+    %\draw (\i, -0.1) -- (\i, +0.1);
+    \stepcounter{y}
+    \stepcounter{y}
+  }
+
+  \foreach \time/\lib/\a/\b/\c in {%
+    1994/MLC++/-1/0/red,
+    2000/OpenCV/+1/0/blue,
+    2002/Torch/-1/0/teal,
+    2007/scikit/+1/0/magenta,
+    2008/Accord/-1/+0.1/orange,
+    2008/Theano/-1.5/-0.1/black,
+    2010/MOA/+1/0/cyan,
+    2011/Mahout/-1/0/teal,
+    2012/Pattern/+1.7/-0.1/red,
+    2014/DL4J/-0.5/0.15/blue,
+    2014/Caffe/+1/-0.15/olive,
+    2014/cuDNN/-1.5/0/magenta,
+    2015/TensorFlow/+1.5/0/orange,
+    2015/MLlib/-1/0.2/black%
+    } {
+    \draw [\c] ({(\time - 1992)/2 + \b}, \a) node [align=center] {\lib};
+    \filldraw [\c] ({(\time - 1992)/2 + \b}, 0) circle [radius=1.5pt];
+  }
+
+  \end{tikzpicture}
+\label{fig:timeline}
+\caption{A timeline showing the release of machine-learning libraries discussed
+  in section I in the last 25 years.}
+\end{figure*}
 
 \subsection{Deep Learning}
 
@@ -106,22 +147,22 @@ general-purpose n-dimensional array (tensor) objects.
 while Theano enjoys greatest popularity among the machine-learning community, it
 is, in essence, not a machine-learning library at all. Rather, it is a
 programming framework that allows users to declare mathematical expressions
-\emph{symbolically}, as computational graphs wich may be optimized, eventually
+\emph{symbolically}, as computational graphs which may be optimized, eventually
 compiled and finally executed in a fast and efficient manner on either CPU or
 GPU devices. As such, \cite{theano} labels Theano a ``mathematical compiler''.
 
 \emph{Caffe}\footnote{http://caffe.berkeleyvision.org} is an open-source
-deep-learning library maintained by the Berkely Vision and Learning Center
-(BVLC), released in 2014 under a BSD-License \cite{caffe}. It is implemented in
-C++ and uses neural-network layers as its basic computational building blocks
-(as opposed to Theano and others, where the user must define individual
-mathematical operations making up layers). A deep-learning model, consisting of
-many such layers, is stored in the Google Protocol Buffer data-representation
-format. While models may manually be defined in this Protocol Buffer
-``language'', there exist bindings to Python and MATLAB to generate them
-programmatically. Caffe is especially well suited to the development and
-training of \emph{convolutional neural networks} (CNNs or ConvNets), used
-extensively in the domain of image-recognition.
+deep-learning library maintained by the Berkeley Vision and Learning Center
+(BVLC). It was released in 2014 under a BSD-License \cite{caffe}. Caffe
+implemented in C++ and uses neural-network layers as its basic computational
+building blocks (as opposed to Theano and others, where the user must define
+individual mathematical operations making up layers). A deep-learning model,
+consisting of many such layers, is stored in the Google Protocol Buffer
+data-representation format. While models may manually be defined in this
+Protocol Buffer ``language'', there exist bindings to Python and MATLAB to
+generate them programmatically. Caffe is especially well suited to the
+development and training of \emph{convolutional neural networks} (CNNs or
+ConvNets), used extensively in the domain of image-recognition.
 
 While the aforementioned machine-learning frameworks allowed for the definition
 of deep-learning models in Python, MATLAB and Lua, the
@@ -129,13 +170,13 @@ of deep-learning models in Python, MATLAB and Lua, the
 also the Java programmer to create deep neural-networks. DL4J includes
 functionality to create Restricted Boltzmann machines, convolutional and
 recurrent neural networks, deep belief networks and other types of deep-learning
-models. Moreover, DL4J enables horizontal scalabality using distributed
+models. Moreover, DL4J enables horizontal scalability using distributed
 computing platforms such as Apache Hadoop or Spark. It was released in 2014 by
 Adam Gibson, under an Apache 2.0 open-source license.
 
 Lastly, we add the NVIDIA Deep Learning
 SDK\footnote{https://developer.nvidia.com/deep-learning-software} to to this
-list. Its main goal is to maximize the perfomance of deep-learning algorithms on
+list. Its main goal is to maximize the performance of deep-learning algorithms on
 (NVIDIA) graphical-processing-units (GPUs). The SDK consists of three core
 modules. The first, \emph{cuDNN}, provides high-performance GPU implementations
 for deep-learning algorithms such as convolutions, activations functions and
