@@ -62,6 +62,8 @@ Describe the abstract concepts of the TensorFlow Interface, nothing about progra
 
 The data-flow graph, `Variables`, `Operations`, `Tensors`, `Sessions`, `Graphs` etc.
 
+Sparse Tensors.
+
 ### 3.2 Execution Model
 
 Speak to the execution of a Graph:
