@@ -5,5 +5,29 @@
 \usepackage{amssymb}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage[T1]{fontenc}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\softmax}{softmax}
+
+\usepackage{listings}
+
+\definecolor{stringgreen}{RGB}{50,220,15}
+
+\lstset{%
+	basicstyle=\ttfamily\footnotesize,
+	language=Python,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	numbers=none,
+	numberstyle=\tiny\color{red},
+	keywordstyle=\color{magenta},
+	commentstyle=\color{gray},
+	stringstyle=\color{stringgreen},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=2
+}

@@ -56,7 +56,8 @@ Deep Learning or NN?
 
 ## 3. TensorFlow: Interface
 
-Describe the abstract concepts of the TensorFlow Interface, nothing about programming.
+Describe the abstract concepts of the TensorFlow Interface, nothing about
+programming.
 
 ### 3.1 Elements of a TensorFlow Graph
 

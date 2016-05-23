@@ -51,7 +51,7 @@ elements of such a dataflow graph, namely \emph{operations}, \emph{variables},
   %
   \begin{tikzpicture}
     % x^T w
-    \draw [very thick] (1, 2) circle [radius=0.5cm] node {$\mathbf{x^Tw}$};
+    \draw [very thick] (1, 2) circle [radius=0.5cm] node {$\mathbf{x^\top w}$};
 
     % x and weights
     \draw [very thick] (0, 0) circle [radius=0.5cm] node {$\mathbf{x}$};
@@ -88,7 +88,7 @@ elements of such a dataflow graph, namely \emph{operations}, \emph{variables},
 
 
     % Figure Label
-    \draw (2, -1) node {$\hat{y} = \sigma(\mathbf{x}^T \mathbf{w} + b)$};
+    \draw (2, -1) node {$\hat{y} = \sigma(\mathbf{x}^\top \mathbf{w} + b)$};
   \end{tikzpicture}
   \label{fig:graphs}
   \caption{Examples of computational graphs. The left graph displays a very
@@ -164,6 +164,10 @@ programming environment, such as for the expression $x + y$, a tensor object is
 returned. This tensor may then be supplied as input to other computations,
 thereby connecting the source and destination operations with an edge. By these
 means, data flows through a TensorFlow graph.
+
+Next to regular tensors, TensorFlow also provides a \texttt{SparseTensor}
+data-structure, allowing for a more space-efficient dictionary-like
+representation of \emph{sparse tensors} with only few non-zeros entries.
 
 \subsubsection{Variables}\label{sec:model-graphs-vars}
 
@@ -684,16 +688,15 @@ computes the \emph{numerical values} of the gradients at those input values. It
 does so by explicitly traversing the graph first in the forward order
 (forward-propagation) to compute the cost, then in reverse order
 (back-propagation) to compute the gradients via the chain rule. Another
-approach, more relevant to TensorFlow, is what the authors of
-\cite{goodfellow2016} call \emph{symbol-to-symbol derivatives} and the authors
-of \emph{tensorflow} simply term \emph{automatic gradient computation}. In this
-case, gradients are not computed by an explicit implementation of the
-backpropagation algorithm. Rather, special nodes are added to the computational
-graph that calculate the gradient of each operation and thus ultimately the
-chain rule. To perform back-propagation, these nodes must then simply be
-executed like any other nodes by the graph evaluation engine. As such, this
-approach does not produce the desired derivatives as a numeric value, but only
-as a \emph{symbolic} handle to compute those values.
+approach, more relevant to TensorFlow, is what \cite{goodfellow2016} calls
+\emph{symbol-to-symbol derivatives} and \cite{tensorflow} terms \emph{automatic
+  gradient computation}. In this case, gradients are not computed by an explicit
+implementation of the backpropagation algorithm. Rather, special nodes are added
+to the computational graph that calculate the gradient of each operation and
+thus ultimately the chain rule. To perform back-propagation, these nodes must
+then simply be executed like any other nodes by the graph evaluation engine. As
+such, this approach does not produce the desired derivatives as a numeric value,
+but only as a \emph{symbolic handle} to compute those values.
 
 When TensorFlow needs to compute the gradient of a particular node $\nu$ (that
 is, the tensor produced by that operation) with respect to some other tensor
@@ -707,7 +710,7 @@ and multiplies it with its gradient $\frac{do}{d\alpha}$. At the end of the
 traversal, there will be a node providing a symbolic handle to the overall
 target derivative $\frac{d\nu}{d\alpha}$. It should now be clear that
 back-propagation in this symbol-to-symbol approach is implemented just like
-\emph{any other} computation and requires no explicit programming. Figure
+\emph{any other computation} and requires no exceptional handling. Figure
 \ref{fig:gradients} shows how a computational graph may look before and after
 gradient nodes are added.
 
@@ -784,12 +787,12 @@ gradient nodes are added.
     \caption{}
     \label{fig:gradients-b}
   \end{subfigure}
-  \label{fig:gradients}
   \caption{A computational graph before (\ref{fig:gradients-a}) and after
     (\ref{fig:gradients-b}) gradient nodes are added. In this
     \emph{symbol-to-symbol} approach, the gradient $\frac{dz}{dw}$ is just
     simply an operation like any other and therefore requires no special
     handling by the graph evaluation engine.}
+  \label{fig:gradients}
 \end{figure}
 
 In \cite{tensorflow} it is noted that symbol-to-symbol derivatives may incur a
@@ -828,12 +831,12 @@ Some machine-learning algorithms may benefit from being able to control the flow
 of their execution, performing certain steps only under a particular condition
 or repeating some computation a fixed or variable number of times. For this,
 TensorFlow provides a set of control-flow primitives including
-\texttt{if}-conditionals and \texttt{while}-loops. The fact that the possibility
-of loops exists is the reason why a TensorFlow computational graph is not
-necessarily \emph{acyclic}. If the number of iterations for of a loop would be
-fixed and known at graph compile-time, its body could be \emph{unrolled} into an
-acyclic sequence of computations, one per loop iteration \cite{theano}. However,
-to support a variable amount of iterations, TensorFlow must jump through an
+\texttt{if}-conditionals and \texttt{while}-loops. The possibility of loops is
+the reason why a TensorFlow computational graph is not necessarily
+\emph{acyclic}. If the number of iterations for of a loop would be fixed and
+known at graph compile-time, its body could be \emph{unrolled} into an acyclic
+sequence of computations, one per loop iteration \cite{theano}. However, to
+support a variable amount of iterations, TensorFlow is forced to jump through an
 additional set of hoops, as described in \cite{tensorflow}.
 
 One aspect that must be especially cared for when introducing control-flow is
@@ -854,7 +857,7 @@ storage on disk. It is possible to add \texttt{Store} nodes to the computational
 graph and connect them to variables whose tensors you wish to save. Furthermore,
 a variable may be connected to a \texttt{Restore} operation, which deserializes
 a stored tensor at a later point. This is especially useful when training a
-model over a long period of time, to keep track of the model's performance as
+model over a long period of time to keep track of the model's performance as
 time progresses while reducing the risk of losing any progress made. Also,
 checkpoints are a vital element to ensuring fault-tolerance in a distributed
 environment \cite{tensorflow}.
