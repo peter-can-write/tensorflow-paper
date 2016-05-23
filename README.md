@@ -113,9 +113,13 @@ prototyping):
 * Keras
 * TFLearn
 
-## 5. Comparison With Other DL Frameworks
+## 5 Visualization
 
-### 5.1 Comparison of Basic Paradigms
+
+
+## 6. Comparison With Other DL Frameworks
+
+### 6.1 Comparison of Basic Paradigms
 
 Caffe's basic units are layers rather than nodes, Theano also uses symbolic
 graphs, Torch is imperative while TensorFlow is declarative etc.
@@ -125,15 +129,11 @@ graphs, Torch is imperative while TensorFlow is declarative etc.
 * Caffe vs. TensorFlow
 * DL4J vs TensorFlow (maybe not)
 
-### 5.2 Performance Comparison
+### 6.2 Performance Comparison
 
 Speak to Benchmarks:
 
 http://arxiv.org/abs/1511.06435v3
 http://arxiv.org/pdf/1605.02688v1.pdfA
-
-## 6
-
-Give examples of use cases today.
 
 ## 7 Conclusion
