@@ -13,4 +13,4 @@ net = tflearn.regression(output_layer, optimizer=sgd)
 
 # Training
 model = tflearn.DNN(net)
-model.fit(X, Y, validation_set=(validX, validY), show_metric=True)
+model.fit(X, Y, validation_set=(validX, validY))

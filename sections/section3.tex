@@ -90,18 +90,20 @@ examples = tf.placeholder(tf.float32, [None, 784])
 labels = tf.placeholder(tf.float32, [None, 10])
 \end{lstlisting}
 
-Given an example matrix $X \in \mathbb{R}^{n \times 784}$ containing $n$ images,
-the learning task then applies an affine transformation $X \cdot W + b$, where
-$W$ is a \emph{weight matrix} $\in \mathbb{R}^{784 \times 10}$ and $b$ a scalar
-\emph{bias} $\in \mathbb{R}$. This yields a new matrix
-$Y \in \mathbb{R}^{n \times 10}$, containing the \emph{scores} or \emph{logits}
-of our model for each example and each possible digit. These scores are more or
-less arbitrary values and not a probability distribution, i.e. they need neither
-be $\in [0, 1]$ nor sum to one. To transform these logits into a valid
-probability distribution, giving the likelyhood $\Pr[x = i]$ that the $x$-th
-example represents the digit $i$, we make use of the softmax function, given in
-Equation \ref{eq:softmax}. Our final estimates are thus calculated by
-$\softmax(X \cdot W + b)$, as shown below.
+Given an example matrix $\mathbf{X} \in \mathbb{R}^{n \times 784}$ containing
+$n$ images, the learning task then applies an affine transformation
+$\mathbf{X} \cdot \mathbf{W} + \mathbf{b}$, where $\mathbf{W}$ is a \emph{weight
+  matrix} $\in \mathbb{R}^{784 \times 10}$ and $\mathbf{b}$ a \emph{bias} vector
+$\in \mathbb{R}^{10}$. This yields a new matrix
+$\mathbf{Y} \in \mathbb{R}^{n \times 10}$, containing the \emph{scores} or
+\emph{logits} of our model for each example and each possible digit. These
+scores are more or less arbitrary values and not a probability distribution,
+i.e. they need neither be $\in [0, 1]$ nor sum to one. To transform the logits
+into a valid probability distribution, giving the likelihood $\Pr[x = i]$ that
+the $x$-th example represents the digit $i$, we make use of the softmax
+function, given in Equation \ref{eq:softmax}. Our final estimates are thus
+calculated by $\softmax(\mathbf{X} \cdot \mathbf{W} + \mathbf{b})$, as shown
+below.
 
 \begin{equation}\label{eq:softmax}
   \softmax(\mathbf{x})_i = \frac{\exp(\mathbf{x}_i)}{\sum_j \exp(\mathbf{x}_j)}
@@ -116,11 +118,12 @@ estimates = tf.nn.softmax(logits)
 \end{lstlisting}
 
 Next, we compute our objective function, producing the error or \emph{loss} of
-the model given its current trainable parameters $W$ and $b$. We do this by
-calculating the \emph{cross entropy}
-$H(L, Y)_i = -\sum_j L_{i,j} \cdot \log(Y_{i,j})$ between the probability
-distributions of our estimates $Y$ and the one-hot-encoded labels $L$. More
-precisely, we consider the mean cross entropy over all examples as the loss.
+the model given its current trainable parameters $\mathbf{W}$ and
+$\mathbf{b}$. We do this by calculating the \emph{cross entropy}
+$H(\mathbf{L}, \mathbf{Y})_i = -\sum_j \mathbf{L}_{i,j} \cdot
+\log(\mathbf{Y}_{i,j})$ between the probability distributions of our estimates
+$\mathbf{Y}$ and the one-hot-encoded labels $\mathbf{L}$. More precisely, we
+consider the mean cross entropy over all examples as the loss.
 
 \begin{lstlisting}
 # Computes the cross-entropy and sums the rows
@@ -206,7 +209,7 @@ possible to feed an input tensor into a fully-connected (``dense'')
 neural-network layer as we did in Subsection \ref{sec:code-walk} with just a
 single line of code. Shown below is an example use of PrettyTensor, where a
 standard TensorFlow placeholder is wrapped into a library-compatible object and
-then feed through three fully-connected layers to finally output a softmax
+then fed through three fully-connected layers to finally output a softmax
 distribution.
 
 \begin{lstlisting}
@@ -235,7 +238,7 @@ rest of our code base \emph{untouched}. Furthermore, TFLearn handles everything
 related to visualization wtih TensorBoard, discussed in Section
 \ref{sec:visual}, automatically. Shown below is how we can reproduce the full 65
 lines of standard TensorFlow code given in Appendix \ref{app:code} with
-\emph{less than 10 lines of code} using TFLearn.
+\emph{less than 10 lines} using TFLearn.
 
 \lstinputlisting{code/mnist_tflearn.py}
 
