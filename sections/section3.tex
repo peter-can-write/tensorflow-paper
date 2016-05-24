@@ -233,25 +233,11 @@ the entire setup for the output layer discussed in Subsection
 \ref{sec:code-walk} with just a single TFLearn method invocation, leaving the
 rest of our code base \emph{untouched}. Furthermore, TFLearn handles everything
 related to visualization wtih TensorBoard, discussed in Section
-\ref{sec:visual}, automatically. Shown below is how we can reproduce the full 80
+\ref{sec:visual}, automatically. Shown below is how we can reproduce the full 65
 lines of standard TensorFlow code given in Appendix \ref{app:code} with
 \emph{less than 10 lines of code} using TFLearn.
 
-\begin{lstlisting}
-import tflearn
-import tflearn.datasets.mnist as mnist
-
-X, Y, validX, validY = mnist.load_data(one_hot=True)
-
-input_layer = tflearn.input_data(shape=[None, 784])
-output_layer = tflearn.fully_connected(input_layer, 10, activation='softmax')
-
-sgd = tflearn.SGD(learning_rate=0.5)
-net = tflearn.regression(output_layer, optimizer=sgd)
-
-model = tflearn.DNN(net)
-model.fit(X, Y, validation_set=(validX, validY), show_metric=True)
-\end{lstlisting}
+\lstinputlisting{code/mnist_tflearn.py}
 
 %%% Local Variables:
 %%% mode: latex
