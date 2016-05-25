@@ -1,17 +1,17 @@
 \section{The TensorFlow Programming Model}\label{sec:model}
 
-In this section we aim to provide an in-depth discussion of the abstract
-computational principles underlying the TensorFlow software library. We begin
-with a thorough examination of the basic structural and architectural decisions
-made by the TensorFlow development team and explain how machine-learning
-algorithms may be expressed in its dataflow-graph language. Subsequently, we
-study TensorFlow's execution model and provide insight into the way TensorFlow
-models are assigned to available hardware processing units in a local as well as
-distributed environment. Then, we investigate the various optimizations
-incorporated into TensorFlow, targeted at improving both software and hardware
-efficiency. Lastly, we list extensions to the basic programming model that aid
-the user in both computational as well as logistical aspects of training a
-machine-learning model with TensorFlow.
+In this section we provide an in-depth discussion of the abstract computational
+principles underlying the TensorFlow software library. We begin with a thorough
+examination of the basic structural and architectural decisions made by the
+TensorFlow development team and explain how machine-learning algorithms may be
+expressed in its dataflow-graph language. Subsequently, we study TensorFlow's
+execution model and provide insight into the way TensorFlow models are assigned
+to available hardware processing units in a local as well as distributed
+environment. Then, we investigate the various optimizations incorporated into
+TensorFlow, targeted at improving both software and hardware efficiency. Lastly,
+we list extensions to the basic programming model that aid the user in both
+computational as well as logistical aspects of training a machine-learning model
+with TensorFlow.
 
 \subsection{Computational Graph Architecture}\label{sec:model-graphs}
 
@@ -135,6 +135,7 @@ TensorFlow graph.
     Neural-network units & \texttt{SoftMax}, \texttt{ReLU}, \texttt{Conv2D}
     \\
     Checkpoint operations & \texttt{Save}, \texttt{Restore}
+    \\ \bottomrule
     \end{tabular}
     \label{tab:ops}
     \caption{Examples for TensorFlow operations \cite{tensorflow}.}
@@ -805,12 +806,12 @@ all of its arguments and invokes every function it depends on. It is given in
 Equation \ref{eq:chain-recomp} for reference.
 
 \begin{equation}\label{eq:chain-reuse}
-  \frac{d f}{d w} = f'(y) \cdot g'(x) \cdot h'(w) \text{ with } y = g(x), x =
+  \frac{\mathrm{d} f}{\mathrm{d} w} = f'(y) \cdot g'(x) \cdot h'(w) \text{ with } y = g(x), x =
   h(w)
 \end{equation}
 
 \begin{equation}\label{eq:chain-recomp}
-  \frac{d f}{d w} = f'(g(h(w))) \cdot g'(h(w)) \cdot h'(w)
+  \frac{\mathrm{d} f}{\mathrm{d} w} = f'(g(h(w))) \cdot g'(h(w)) \cdot h'(w)
 \end{equation}
 
 According to \cite{tensorflow}, TensorFlow currently employs the first

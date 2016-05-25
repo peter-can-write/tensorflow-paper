@@ -1,11 +1,11 @@
 % Additions to the IEEE preamble
 
+\usepackage[dvipsnames]{xcolor}
 \usepackage{tikz}
 \usepackage{booktabs}
 \usepackage{amssymb}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage{xcolor}
 \usepackage[T1]{fontenc}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -31,3 +31,7 @@
 	breakatwhitespace=true,
 	tabsize=2
 }
+
+% http://tex.stackexchange.com/questions/2441/how-to-add-a-forced-line-break-inside-a-table-cell
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}

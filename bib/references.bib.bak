@@ -12,6 +12,28 @@
   url =       {http://arxiv.org/abs/1210.7463}
 }
 
+@InProceedings{alexnet,
+  author =    {Alex Krizhevsky and Ilya Sutskever and Geoffrey E. Hinton},
+  title =     {Imagenet classification with deep convolutional neural networks},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year =      {2012},
+  pages =     {2012}
+}
+
+@Article{bosch,
+  author =        {{Bahrampour}, S. and {Ramakrishnan}, N. and {Schott}, L. and {Shah}, M.},
+  title =         {{Comparative Study of Deep Learning Software Frameworks}},
+  journal =       {ArXiv e-prints},
+  year =          {2015},
+  month =         nov,
+  adsnote =       {Provided by the SAO/NASA Astrophysics Data System},
+  adsurl =        {http://adsabs.harvard.edu/abs/2015arXiv151106435B},
+  archiveprefix = {arXiv},
+  eprint =        {1511.06435},
+  keywords =      {Computer Science - Learning},
+  primaryclass =  {cs.LG}
+}
+
 @Article{caffe,
   author =    {Yangqing Jia and Evan Shelhamer and Jeff Donahue and Sergey Karayev and Jonathan Long and Ross B. Girshick and Sergio Guadarrama and Trevor Darrell},
   title =     {Caffe: Convolutional Architecture for Fast Feature Embedding},
@@ -22,6 +44,24 @@
   biburl =    {http://dblp.uni-trier.de/rec/bib/journals/corr/JiaSDKLGGD14},
   timestamp = {Fri, 12 Sep 2014 12:44:21 +0200},
   url =       {http://arxiv.org/abs/1408.5093}
+}
+
+@Misc{convnet-bench,
+  author =       {Soumith Chintala},
+  title =        {convnet-benchmarks},
+  howpublished = {GitHub},
+  month =        {April},
+  year =         {2016 (accessed May 24, 2016)},
+  note =         {https://github.com/soumith/convnet-benchmarks}
+}
+
+@Misc{deepmind,
+  author =       {Koray Kavukcuoglu},
+  title =        {DeepMind moves to TensorFlow},
+  howpublished = {Google Research Blog},
+  month =        apr,
+  year =         {2016 (accessed May 24, 2016)},
+  note =         {http://googleresearch.blogspot.de/2016/04/deepmind-moves-to-tensorflow.html}
 }
 
 @Article{dropout,
@@ -40,6 +80,34 @@
   note =   {Book in preparation for MIT Press},
   year =   {2016},
   url =    {http://www.deeplearningbook.org}
+}
+
+@Article{inception,
+  author =        {{Szegedy}, C. and {Liu}, W. and {Jia}, Y. and {Sermanet}, P. and {Reed}, S. and {Anguelov}, D. and {Erhan}, D. and {Vanhoucke}, V. and {Rabinovich}, A.},
+  title =         {{Going Deeper with Convolutions}},
+  journal =       {ArXiv e-prints},
+  year =          {2014},
+  month =         sep,
+  adsnote =       {Provided by the SAO/NASA Astrophysics Data System},
+  adsurl =        {http://adsabs.harvard.edu/abs/2014arXiv1409.4842S},
+  archiveprefix = {arXiv},
+  eprint =        {1409.4842},
+  keywords =      {Computer Science - Computer Vision and Pattern Recognition},
+  primaryclass =  {cs.CV}
+}
+
+@Article{lenet,
+  author =   {Y. Lecun and L. Bottou and Y. Bengio and P. Haffner},
+  title =    {Gradient-based learning applied to document recognition},
+  journal =  {Proceedings of the IEEE},
+  year =     {1998},
+  volume =   {86},
+  number =   {11},
+  pages =    {2278-2324},
+  month =    {Nov},
+  doi =      {10.1109/5.726791},
+  issn =     {0018-9219},
+  keywords = {backpropagation;convolution;multilayer perceptrons;optical character recognition;2D shape variability;GTN;back-propagation;cheque reading;complex decision surface synthesis;convolutional neural network character recognizers;document recognition;document recognition systems;field extraction;gradient based learning technique;gradient-based learning;graph transformer networks;handwritten character recognition;handwritten digit recognition task;high-dimensional patterns;language modeling;multilayer neural networks;multimodule systems;performance measure minimization;segmentation recognition;Character recognition;Feature extraction;Hidden Markov models;Machine learning;Multi-layer neural network;Neural networks;Optical character recognition software;Optical computing;Pattern recognition;Principal component analysis}
 }
 
 @Article{mahout,
@@ -126,6 +194,24 @@
   url =        {http://dl.acm.org/citation.cfm?id=2188385.2343710}
 }
 
+@Article{penntreebank,
+  author =     {Marcus, Mitchell P. and Marcinkiewicz, Mary Ann and Santorini, Beatrice},
+  title =      {Building a Large Annotated Corpus of English: The Penn Treebank},
+  journal =    {Comput. Linguist.},
+  year =       {1993},
+  volume =     {19},
+  number =     {2},
+  pages =      {313--330},
+  month =      jun,
+  acmid =      {972475},
+  address =    {Cambridge, MA, USA},
+  issn =       {0891-2017},
+  issue_date = {June 1993},
+  numpages =   {18},
+  publisher =  {MIT Press},
+  url =        {http://dl.acm.org/citation.cfm?id=972470.972475}
+}
+
 @Article{rampasek,
   author =        {Rampasek, Ladislav and Goldenberg, Anna},
   title =         {TensorFlow: Biology's Gateway to Deep Learning?},
@@ -198,8 +284,8 @@
   title =        {Announcing TensorFlow 0.8 – now with distributed computing support!},
   howpublished = {Google Research Blog},
   month =        {April},
-  year =         {2016},
-  note =         {Access date: 22 May 2016}
+  year =         {2016 (accessed May 22, 2016)},
+  note =         {http://googleresearch.blogspot.de/2016/04/announcing-tensorflow-08-now-with.html}
 }
 
 @Article{theano,
@@ -227,7 +313,7 @@
   title =        {Google supercharges machine learning tasks with TPU custom chip},
   howpublished = {Google Cloud Platform Blog},
   month =        {May},
-  year =         {2016},
-  note =         {Access Date: 22 May 2016}
+  year =         {2016 (accessed May 22, 2016)},
+  note =         {https://cloudplatform.googleblog.com/2016/05/Google-supercharges-machine-learning-tasks-with-custom-chip.html}
 }
 
