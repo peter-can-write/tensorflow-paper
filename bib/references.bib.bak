@@ -302,6 +302,15 @@
   url =           {http://dx.doi.org/10.1016/j.cels.2016.01.009}
 }
 
+@Misc{rankbrain,
+  author =       {Jack Clark},
+  title =        {Google Turning Its Lucrative Web Search Over to AI Machines},
+  howpublished = {Bloomberg Technology},
+  month =        oct,
+  year =         {2015 (accessed: May 25, 2016)},
+  note =         {http://www.bloomberg.com/news/articles/2015-10-26/google-turning-its-lucrative-web-search-over-to-ai-machines}
+}
+
 @InProceedings{relu,
   author =    {Vinod Nair and Geoffrey E. Hinton},
   title =     {Rectified Linear Units Improve Restricted Boltzmann Machines},
