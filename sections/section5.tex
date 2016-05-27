@@ -1,15 +1,14 @@
-\section{Comparison With Other Deep-Learning Frameworks}\label{sec:comp}
+\section{Comparison With Other Deep Learning Frameworks}\label{sec:comp}
 
-Next to TensorFlow, there exist a number of other open-source deep-learning
+Next to TensorFlow, there exist a number of other open source deep learning
 software libraries, the most popular being Theano, Torch and Caffe. In this
 section, we explore the \emph{qualitative} as well as \emph{quantitative}
 differences between TensorFlow and each of these alternatives. We begin with a
-``high-level'' qualitative comparison and examine where TensorFlow diverges or
-overlaps conceptually or architectually. Then, we review a few sources of
-quantitative comparisons, including as set of benchmarks, and state as well as
-discuss their results.
+``high level'' qualitative comparison and examine where TensorFlow diverges or
+overlaps conceptually or architecturally. Then, we review a few sources of
+quantitative comparisons and state as well as discuss their results.
 
-\subsection{Qualitative Comparision}\label{sec:comp-quality}
+\subsection{Qualitative Comparison}\label{sec:comp-quality}
 
 The following three paragraphs compare Theano, Torch and Caffe to TensorFlow,
 respectively. Table \ref{tab:comp} provides an overview of the most important
@@ -48,13 +47,13 @@ talking points.
 Of the three candidate alternatives we discuss, Theano, which has a Python
 frontend, is most similar to TensorFlow. Like TensorFlow, Theano's programming
 model is \emph{declarative} rather than \emph{imperative} and based on
-computational graphs. Also, Theano employs symbolic differentation, as does
+computational graphs. Also, Theano employs symbolic differentiation, as does
 TensorFlow. However, Theano is known to have very long graph compile times as it
 translates Python code to C++/CUDA \cite{theano}. In part, this is due to the
-fact that Theano applies a number of more advanced graph-optimization algorithms
+fact that Theano applies a number of more advanced graph optimization algorithms
 \cite{theano}, while TensorFlow currently only performs common subgraph
 elimination. Moreover, Theano's visualization tools are very poor in comparison
-to TensorBoard. Next to built-in functionality to output plain-text
+to TensorBoard. Next to built-in functionality to output plain text
 representations of the graph or static images, a plugin can be used to generate
 slightly interactive HTML visualizations. However, it is nowhere near as
 powerful as TensorBoard. Lastly, there is also no (out-of-the-box) support for
@@ -64,7 +63,7 @@ of TensorFlow.
 \subsubsection{Torch}\label{sec:comp-quality-torch}
 
 One of the principle differences between Torch and TensorFlow is the fact that
-Torch, while it has a C/CUDA backend, uses the Lua as its main frontend. While
+Torch, while it has a C/CUDA backend, uses Lua as its main frontend. While
 Lua(JIT) is one of the fastest scripting languages and allows for rapid
 prototyping and quick execution, it is not yet very mainstream. This implies
 that while it may be easy to train and develop models with Torch, Lua's limited
@@ -74,42 +73,42 @@ aspect, Torch's programming model is fundamentally quite different from
 TensorFlow. Models are expressed in an imperative programming style and not as
 declarative computational graphs. This means that the programmer must, in fact,
 be concerned with the order of execution of operations. It also implies that
-Torch does not use symbol-to-symbol, bur rather symbol-to-number differentiation
+Torch does not use symbol-to-symbol, but rather symbol-to-number differentiation
 requiring explicit forward and backward passes to compute gradients.
 
 \subsubsection{Caffe}\label{sec:comp-quality-caffe}
 
-Caffe ist most dissimilar to TensorFlow --- in various ways. While there exist
+Caffe is most dissimilar to TensorFlow --- in various ways. While there exist
 high-level MATLAB and Python frontends to Caffe for model creation, its main
 interface is really the Google Protobuf ``language'' (it is more a fancy, typed
 version of JSON), which gives a very different experience compared to
 Python. Also, the basic building blocks in Caffe are not operations, but entire
-neural-network layers. In that sense, TensorFlow can be considered fairly
+neural network layers. In that sense, TensorFlow can be considered fairly
 low-level in comparison. Like Torch, Caffe has no notion of a computational
 graphs or symbols and thus computes derivatives via the symbol-to-number
 approach. Caffe is especially well suited for development of convolutional
-neural networks and image-recognition tasks, however it falls short in many
+neural networks and image recognition tasks, however it falls short in many
 other state-of-the-art categories supported well by TensorFlow. For example,
 Caffe, by design, does not support cyclic architectures, which form the basis of
-RNN, LSTM and other models. There is no support for distributed
+RNN, LSTM and other models. Caffe has no support for distributed
 execution\footnote{\url{https://github.com/BVLC/caffe/issues/876}}.
 
 \subsection{Quantitative Comparison}\label{sec:comp-quantity}
 
 We will now review three sources of quantitative comparisons between TensorFlow
-and other deep-learning libraries, providing a summary of the most important
+and other deep learning libraries, providing a summary of the most important
 results of each work. Furthermore, we will briefly discuss the overall trend of
 these benchmarks.
 
 The first work, \cite{bosch}, authored by the Bosch Research and Technology
 Center in late March 2016, compares the performance of TensorFlow, Torch, Theano
-and Caffe (among others) with respect to various neural-network architectures.
+and Caffe (among others) with respect to various neural network architectures.
 Their setup involves Ubuntu 14.04 running on an Intel Xeon E5-1650 v2 CPU @ 3.50
-GH and an NVIDIA GeForce GTX Titan X/PCIe/SSE2 GPU. One benchmark we find
+GHz and an NVIDIA GeForce GTX Titan X/PCIe/SSE2 GPU. One benchmark we find
 noteworthy tests the relative performance of each library on a slightly modified
 reproduction of the LeNet CNN model \cite{lenet}. More specifically, the authors
 measure the forward-propagation time, which they deem relevant for model
-deployment, and the back-propagation time, imporant for model training. We have
+deployment, and the back-propagation time, important for model training. We have
 reproduced an excerpt of their results in Table \ref{tab:bosch}, where we show
 their outcomes on (a) a CPU running 12 threads and (b) a GPU. Interestingly, for
 (a), TensorFlow ranks second behind Torch in both the forward and backward
@@ -170,8 +169,8 @@ TensorFlow\footnote{As of TensorFlow 0.8, released in April 2016 and thus after
 
 The second source in our collection is the \emph{convnet-benchmarks} repository
 on GitHub by Soumith Chintala \cite{convnet-bench}, an artificial intelligence
-research engineer at Facebook. The commit we
-reference\footnote{84b5bb1785106e89691bc0625674b566a6c02147} is dated April 25,
+research engineer at Facebook. The commit we reference\footnote{Commit sha1
+  hash: 84b5bb1785106e89691bc0625674b566a6c02147} is dated April 25,
 2016. Chintala provides an extensive set of benchmarks for a variety of
 convolutional network models and includes many libraries, including TensorFlow,
 Torch and Caffe in his measurements. Theano is not present in all tests, so we
@@ -208,10 +207,10 @@ development team on May 9, 2016. Next to a set of benchmarks for four popular
 CNN models, including the aforementioned AlexNet architecture, the work also
 includes results for an LSTM network operating on the Penn Treebank dataset
 \cite{penntreebank}. Their benchmarks measure words processed per second for a
-small model consisting of a single 200-unit hidden-layer with sequence length
-20, and a large model with two 650-unit hidden-layers and a sequence length of
-50. \cite{theano} also lists a medium-sized model, which we ignore for our
-review. The authors state a hardware configuration consisting of an NVIDIA
+small model consisting of a single 200-unit hidden layer with sequence length
+20, and a large model with two 650-unit hidden layers and a sequence length of
+50. In \cite{theano} also a medium-sized model is tested, which we ignore for
+our review. The authors state a hardware configuration consisting of an NVIDIA
 Digits DevBox with 4 Titan X GPUs and an Intel Core i7-5930K CPU. Moreover, they
 used cuDNN v4 for all libraries included in their benchmarks, which are
 TensorFlow, Torch and Theano. Results for Caffe are not given. In their
@@ -283,26 +282,26 @@ second behind Theano, while Torch remains in last place. Table
 \end{figure}
 
 When TensorFlow was first released, it performed poor on benchmarks, causing
-disappointment within the deep-learning community. Since then, new releases of
+disappointment within the deep learning community. Since then, new releases of
 TensorFlow have emerged, bringing with them improving results. This is reflected
-in our selection of works. \cite{bosch}, published in late March 2016 and thus
-the earliest of the three sources, ranks TensorFlow consistently uncompetitive
-compared to Theano, Torch and Caffe. \cite{convnet-bench}, released almost two
-months later, ranks TensorFlow comparatively better. The latest work reviewed,
-\cite{theano}, then places TensorFlow in first place for LSTMs and also other
-architectures discussed by the authors. We state that one reason for this upward
-trend is that \cite{theano} uses TensorFlow with cuDNN v4 for its GPU
-experiments, whereas \cite{bosch} still used cuDNN v2. While we predict that
-TensorFlow will improve its performance on measurements similar to the ones
-discussed in the future, we believe that these benchmarks --- also today --- do
-not make full use of TensorFlow's potential. The reason for this is that all
-tests were performed on a \emph{single} machine. As we reviewed in depth in
-section \ref{sec:model-exec}, TensorFlow was built with massively parallel
-distributed computing in mind. This ability is currently unique to TensorFlow
-among the popular deep-learning libraries and we estimate that it would be
-advantageous to its performance, particularly for large-scale models. We thus
-hope to see more benchmarks in literature in the future, making better use of
-TensorFlow's many-machine, many-device capabilities.
+in our selection of works. The earliest of the three sources, \cite{bosch},
+published in late March 2016, ranks TensorFlow consistently uncompetitive
+compared to Theano, Torch and Caffe. Released almost two months later,
+\cite{convnet-bench} ranks TensorFlow comparatively better. The latest work
+reviewed, \cite{theano}, then places TensorFlow in first or second place for
+LSTMs and also other architectures discussed by the authors. We state that one
+reason for this upward trend is that \cite{theano} uses TensorFlow with cuDNN v4
+for its GPU experiments, whereas \cite{bosch} still used cuDNN v2. While we
+predict that TensorFlow will improve its performance on measurements similar to
+the ones discussed in the future, we believe that these benchmarks --- also
+today --- do not make full use of TensorFlow's potential. The reason for this is
+that all tests were performed on a \emph{single} machine. As we reviewed in
+depth in section \ref{sec:model-exec}, TensorFlow was built with massively
+parallel distributed computing in mind. This ability is currently unique to
+TensorFlow among the popular deep learning libraries and we estimate that it
+would be advantageous to its performance, particularly for large-scale
+models. We thus hope to see more benchmarks in literature in the future, making
+better use of TensorFlow's many-machine, many-device capabilities.
 
 %%% Local Variables:
 %%% mode: latex
