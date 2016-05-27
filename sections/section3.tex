@@ -1,50 +1,49 @@
 \section{The TensorFlow Programming Interface}\label{sec:code}
 
 Having conveyed the abstract concepts of TensorFlow's computational model in
-Section \ref{sec:model}, we will now concretize those ideas and speak about
-TensorFlow programming interface. We begin with a brief review of the available
-language interfaces in subsection \ref{sec:code-interfaces}. Then, we provide a
-more hands-on look at TensorFlow's Python API by walking through a simple
-practical example. Lastly, we give insight into what higher-level abstractions
-exist for TensorFlow's API, which are especially suitable for rapid prototyping
-of machine-learning models.
+Section \ref{sec:model}, we will now concretize those ideas and speak to
+TensorFlow's programming interface. We begin with a brief discussion of the
+available language interfaces. Then, we provide a more hands-on look at
+TensorFlow's Python API by walking through a simple practical example. Lastly,
+we give insight into what higher-level abstractions exist for TensorFlow's API,
+which are especially beneficial for rapid prototyping of machine learning
+models.
 
 \subsection{Interfaces}\label{sec:code-interfaces}
 
-There currently exist two programming interfaces, in C++ and Python, that allow
+There currently exist two programming interfaces, in C++ and Python, that permit
 interaction with the TensorFlow backend. The Python API boasts a very rich
-feature set allowing for creation and execution of computational graphs. As of
-this writing, the C++ interface (which is really just the core backend
-implementation) provides comparatively much more limited functionality, allowing
-only the execution of graphs built with Python and serialized to Google's
-Protocol Buffer\footnote{https://developers.google.com/protocol-buffers/}
-format. While there is experimental support for also building computational
-graphs in C++, this functionality is currently not as extensive as for the
-Python API.
+feature set for creation and execution of computational graphs. As of this
+writing, the C++ interface (which is really just the core backend
+implementation) provides a comparatively much more limited API, allowing only to
+execute graphs built with Python and serialized to Google's Protocol
+Buffer\footnote{https://developers.google.com/protocol-buffers/} format. While
+there is experimental support for also building computational graphs in C++,
+this functionality is currently not as extensive as in Python.
 
 It is noteworthy that the Python API integrates very well with
-NumPy\footnote{http://www.numpy.org}, a popular open-source Python numeric and
-scientifc programming library. As such, TensorFlow tensors may be interchanged
+NumPy\footnote{http://www.numpy.org}, a popular open source Python numeric and
+scientific programming library. As such, TensorFlow tensors may be interchanged
 with NumPy \texttt{ndarrays} in many places.
 
 \subsection{Walkthrough}\label{sec:code-walk}
 
 In the following paragraphs we give a step-by-step walkthrough of a practical,
 real-world example of TensorFlow's Python API. We will train a simple
-multi-layer-perceptron (MLP) with one input and one output layer to classify
+multi-layer perceptron (MLP) with one input and one output layer to classify
 handwritten digits in the MNIST\footnote{http://yann.lecun.com/exdb/mnist/}
 dataset. In this dataset, the examples are small images of $28 \times 28$ pixels
 depicting handwritten digits in $\in \{0, \dots, 9\}$. We receive each such
-example as a flattened vector of $784$ grayscale pixel intensities. The label
+example as a flattened vector of $784$ gray-scale pixel intensities. The label
 for each example is the digit it is supposed to represent.
 
 We begin our walkthrough by importing the TensorFlow library and reading the
 MNIST dataset into memory. For this we assume a utility module
-\texttt{mnist\_data} with a method \texttt{read}, that takes as arguments a path
-to extract and store the dataset. Moreover, we pass the keyword argument
-\texttt{one\_hot=True} to specify that each label be given to us as a
-\emph{one-hot-encoded} vector $(d_1, \dots, d_{10})^\top$ where all but the
-$i$-th component are set to zero if an example represents the digit $i$:
+\texttt{mnist\_data} with a method \texttt{read} which expects a path to extract
+and store the dataset. Moreover, we pass the parameter \texttt{one\_hot=True} to
+specify that each label be given to us as a \emph{one-hot-encoded} vector
+$(d_1, \dots, d_{10})^\top$ where all but the $i$-th component are set to zero
+if an example represents the digit $i$:
 
 \begin{lstlisting}
 import tensorflow as tf
@@ -76,24 +75,24 @@ by adding two \emph{placeholder} nodes \texttt{examples} and
 with concrete tensors upon graph execution. That is, they must be supplied in
 the \texttt{feed\_dict} argument to \texttt{Session.run()}, mapping tensors to
 replacement values. For each such placeholder, we specify a shape and
-data-type. An interesting feature of TensorFlow at this point is that we may
+data type. An interesting feature of TensorFlow at this point is that we may
 specify the Python keyword \texttt{None} for the first dimension of each
 placeholder shape. This allows us to later on feed a tensor of variable size in
-that dimension. For the column-size of the \texttt{example} placeholder, we
+that dimension. For the column size of the \texttt{example} placeholder, we
 specify the number of features for each image, meaning the $28 \times 28 = 784$
 pixels. The label placeholder should expect 10 columns, corresponding to the
-10-dimensional one-hot-encoded vector for each label digit.
+10-dimensional one-hot-encoded vector for each label digit:
 
 \begin{lstlisting}
-# Using a 32-bit floating-point data-type tf.float32
+# Using a 32-bit floating-point data type tf.float32
 examples = tf.placeholder(tf.float32, [None, 784])
 labels = tf.placeholder(tf.float32, [None, 10])
 \end{lstlisting}
 
 Given an example matrix $\mathbf{X} \in \mathbb{R}^{n \times 784}$ containing
 $n$ images, the learning task then applies an affine transformation
-$\mathbf{X} \cdot \mathbf{W} + \mathbf{b}$, where $\mathbf{W}$ is a \emph{weight
-  matrix} $\in \mathbb{R}^{784 \times 10}$ and $\mathbf{b}$ a \emph{bias} vector
+$\mathbf{X} \cdot \mathbf{W} + \mathbf{b}$, where $\mathbf{W}$ is a \emph{weight}
+  matrix $\in \mathbb{R}^{784 \times 10}$ and $\mathbf{b}$ a \emph{bias} vector
 $\in \mathbb{R}^{10}$. This yields a new matrix
 $\mathbf{Y} \in \mathbb{R}^{n \times 10}$, containing the \emph{scores} or
 \emph{logits} of our model for each example and each possible digit. These
@@ -103,13 +102,13 @@ into a valid probability distribution, giving the likelihood $\Pr[x = i]$ that
 the $x$-th example represents the digit $i$, we make use of the softmax
 function, given in Equation \ref{eq:softmax}. Our final estimates are thus
 calculated by $\softmax(\mathbf{X} \cdot \mathbf{W} + \mathbf{b})$, as shown
-below.
-
-\begin{equation}\label{eq:softmax}
-  \softmax(\mathbf{x})_i = \frac{\exp(\mathbf{x}_i)}{\sum_j \exp(\mathbf{x}_j)}
-\end{equation}
+below:
 
 \begin{lstlisting}
+# Draw random weights for symmetry breaking
+weights = tf.Variable(tf.random_uniform([784, 10]))
+# Slightly positive initial bias
+bias = tf.Variable(tf.constant(0.1, shape=[10]))
 # tf.matmul performs the matrix multiplication XW
 # Note how the + operator is overloaded for tensors
 logits = tf.matmul(examples, weights) + bias
@@ -117,13 +116,17 @@ logits = tf.matmul(examples, weights) + bias
 estimates = tf.nn.softmax(logits)
 \end{lstlisting}
 
+\begin{equation}\label{eq:softmax}
+  \softmax(\mathbf{x})_i = \frac{\exp(\mathbf{x}_i)}{\sum_j \exp(\mathbf{x}_j)}
+\end{equation}
+
 Next, we compute our objective function, producing the error or \emph{loss} of
 the model given its current trainable parameters $\mathbf{W}$ and
 $\mathbf{b}$. We do this by calculating the \emph{cross entropy}
 $H(\mathbf{L}, \mathbf{Y})_i = -\sum_j \mathbf{L}_{i,j} \cdot
 \log(\mathbf{Y}_{i,j})$ between the probability distributions of our estimates
 $\mathbf{Y}$ and the one-hot-encoded labels $\mathbf{L}$. More precisely, we
-consider the mean cross entropy over all examples as the loss.
+consider the mean cross entropy over all examples as the loss:
 
 \begin{lstlisting}
 # Computes the cross-entropy and sums the rows
@@ -132,12 +135,12 @@ cross_entropy = -tf.reduce_sum(
 loss = tf.reduce_mean(cross_entropy)
 \end{lstlisting}
 
-Now that we have an objective function, we can run (stochastic) gradient-descent
+Now that we have an objective function, we can run (stochastic) gradient descent
 to update the weights of our model. For this, TensorFlow provides a
 \texttt{GradientDescentOptimizer} class. It is initialized with the
-learning-rate of the algorithm and provides an operation \texttt{minimize}, to
+learning rate of the algorithm and provides an operation \texttt{minimize}, to
 which we pass our \texttt{loss} tensor. This is the operation we will run
-repedeatedly in a \texttt{Session} environment to train our model.
+repeatedly in a \texttt{Session} environment to train our model:
 
 \begin{lstlisting}
 # We choose a learning rate of 0.5
@@ -159,8 +162,8 @@ variable. However, one most often just uses the
 TensorFlow, which in turn executes the \texttt{initializer} operation for each
 \texttt{Variable} in the graph. Then, we can perform a certain number of
 iterations of stochastic gradient descent, fetching an example and label
-minibatch from the MNIST dataset each time and feeding it to the \texttt{run}
-function of our optimizer. At the end, our loss will (hopefully) be small.
+mini-batch from the MNIST dataset each time and feeding it to the \texttt{run}
+function of our optimizer. At the end, our loss will (hopefully) be small:
 
 \begin{lstlisting}
 with tf.Session(graph=graph) as session:
@@ -178,22 +181,22 @@ with tf.Session(graph=graph) as session:
 \end{lstlisting}
 
 The full code listing for this example, along with some additional
-implementation to compute an accuracy metric at each time-step is given in
+implementation to compute an accuracy metric at each time step is given in
 Appendix \ref{app:code}.
 
 \subsection{Abstractions}\label{sec:code-abstract}
 
 You may have observed how a relatively large amount of effort was required to
-create just a very simple two-layer neural-network. Given that
-\emph{deep}-learning, by implication of its name, makes use of very \emph{deep}
-neural-networks with many hidden layers, it may seem infeasible to each time
-create weight and bias variables, perform a matrix multiplication and addition
-and finally apply some non-linear activation function. When testing ideas for
-new deep-learning models, scientists often wish to rapidly prototype networks
-and quickly exchange layers. In that case, these many steps may seem very
-low-level, repetitive and generally cumbersome. For this reason, there exist a
-number of open-source libraries that \emph{abstract} these concepts and provide
-higher-level building blocks, such as entire layers. We find
+create just a very simple two-layer neural network. Given that \emph{deep}
+learning, by implication of its name, makes use of \emph{deep} neural networks
+with many hidden layers, it may seem infeasible to each time create weight and
+bias variables, perform a matrix multiplication and addition and finally apply
+some non-linear activation function. When testing ideas for new deep learning
+models, scientists often wish to rapidly prototype networks and quickly exchange
+layers. In that case, these many steps may seem very low-level, repetitive and
+generally cumbersome. For this reason, there exist a number of open source
+libraries that \emph{abstract} these concepts and provide higher-level building
+blocks, such as entire layers. We find
 \emph{PrettyTensor}\footnote{https://github.com/google/prettytensor},
 \emph{TFLearn}\footnote{https://github.com/tflearn/tflearn} and
 \emph{Keras}\footnote{http://keras.io} especially noteworthy. The following
@@ -205,11 +208,11 @@ PrettyTensor is developed by Google and provides a high-level interface to the
 TensorFlow API via the \emph{Builder} pattern. It allows the user to wrap
 TensorFlow operations and tensors into ``pretty'' versions and then quickly
 chain any number of layers operating on these tensors. For example, it is
-possible to feed an input tensor into a fully-connected (``dense'')
-neural-network layer as we did in Subsection \ref{sec:code-walk} with just a
+possible to feed an input tensor into a fully connected (``dense'')
+neural network layer as we did in Subsection \ref{sec:code-walk} with just a
 single line of code. Shown below is an example use of PrettyTensor, where a
 standard TensorFlow placeholder is wrapped into a library-compatible object and
-then fed through three fully-connected layers to finally output a softmax
+then fed through three fully connected layers to finally output a softmax
 distribution.
 
 \begin{lstlisting}
@@ -225,7 +228,7 @@ softmax = (prettytensor.wrap(examples)
 
 TFLearn is another abstraction library built on top of TensorFlow that provides
 high-level building blocks to quickly construct TensorFlow graphs. It has a
-highly modular interface and allows for rapid chaining of neural-network layers,
+highly modular interface and allows for rapid chaining of neural network layers,
 regularization functions, optimizers and other elements. Moreover, while
 PrettyTensor still relied on the standard \texttt{tf.Session} setup to train and
 evaluate a model, TFLearn adds functionality to easily train a model given an
@@ -235,7 +238,7 @@ suited to be mixed with existing TensorFlow code. For example, we could replace
 the entire setup for the output layer discussed in Subsection
 \ref{sec:code-walk} with just a single TFLearn method invocation, leaving the
 rest of our code base \emph{untouched}. Furthermore, TFLearn handles everything
-related to visualization wtih TensorBoard, discussed in Section
+related to visualization with TensorBoard, discussed in Section
 \ref{sec:visual}, automatically. Shown below is how we can reproduce the full 65
 lines of standard TensorFlow code given in Appendix \ref{app:code} with
 \emph{less than 10 lines} using TFLearn.
