@@ -2,48 +2,33 @@
 
 Having conveyed the abstract concepts of TensorFlow's computational model in
 Section \ref{sec:model}, we will now concretize those ideas and speak to
-TensorFlow's programming interface. We begin with a brief discussion of the
-available language interfaces. Then, we provide a more hands-on look at
-TensorFlow's Python API by walking through a simple practical example.
+TensorFlow's programming interface. In the following paragraphs we give a
+step-by-step walkthrough of a practical, real-world example of TensorFlow's
+Python API.
 
-\subsection{Interfaces}\label{sec:code-interfaces}
+We will train a simple multi-layer perceptron (MLP) with one input and one
+output layer to classify handwritten digits in the
+MNIST\footnote{http://yann.lecun.com/exdb/mnist/} dataset. In this dataset, the
+examples are small images of $28 \times 28$ pixels depicting handwritten digits
+in $\in \{0, \dots, 9\}$. We receive each such example as a flattened vector of
+$28 \times 28 = 784$ gray-scale pixel intensities. The label for each example is
+a \emph{one-hot-encoded} vector $(d_1, \dots, d_{10})^\top$ where the $i$-th
+component is set to one while all others are zero if the image shows the digit
+$i$.
 
-There currently exist two programming interfaces, in C++ and Python, that permit
-interaction with the TensorFlow backend. The Python API boasts a very rich
-feature set for creation and execution of computational graphs. As of this
-writing, the C++ interface (which is really just the core backend
-implementation) provides a comparatively much more limited API, allowing only to
-execute graphs built with Python and serialized to Google's Protocol
-Buffer\footnote{https://developers.google.com/protocol-buffers/} format. While
-there is experimental support for also building computational graphs in C++,
-this functionality is currently not as extensive as in Python.
-
-\subsection{Walkthrough}\label{sec:code-walk}
-
-In the following paragraphs we give a step-by-step walkthrough of a practical,
-real-world example of TensorFlow's Python API. We will train a simple
-multi-layer perceptron (MLP) with one input and one output layer to classify
-handwritten digits in the MNIST\footnote{http://yann.lecun.com/exdb/mnist/}
-dataset. In this dataset, the examples are small images of $28 \times 28$ pixels
-depicting handwritten digits in $\in \{0, \dots, 9\}$. We receive each such
-example as a flattened vector of $28 \times 28 = 784$ gray-scale pixel
-intensities. The label for each example is a \emph{one-hot-encoded} vector
-$(d_1, \dots, d_{10})^\top$ where the $i$-th component is set to one while all
-others are zero if the image shows the digit $i$.
-
-To begin our walkthrough, we first import the TensorFlow library:
-
+We begin our walkthrough by importing the TensorFlow library:
+%
 \begin{lstlisting}
 import tensorflow as tf
 \end{lstlisting}
-
+%
 Next, we create a new computational graph via the \texttt{tf.Graph}
 constructor. To add operations to this graph, we must register it as the
 \emph{default graph}. The way the TensorFlow API is designed, library routines
 that create new operation nodes always attach these to the current default
 graph. We register our graph as the default by using it as a Python context
 manager in a \texttt{with-as} statement:
-
+%
 \begin{lstlisting}
 # Create a new graph
 graph = tf.Graph()
@@ -52,27 +37,26 @@ graph = tf.Graph()
 with graph.as_default():
   # Add operations ...
 \end{lstlisting}
-
+%
 We are now ready to populate our computational graph with operations. We begin
 by adding two \emph{placeholder} nodes \texttt{examples} and
 \texttt{labels}. Placeholders are special variables that \emph{must} be replaced
 with concrete tensors upon graph execution. That is, they must be supplied in
 the \texttt{feed\_dict} argument to \texttt{Session.run()}, mapping tensors to
-replacement values. For each such placeholder, we specify a shape and
-data type. An interesting feature of TensorFlow at this point is that we may
-specify the Python keyword \texttt{None} for the first dimension of each
-placeholder shape. This allows us to later on feed a tensor of variable size in
-that dimension. For the column size of the \texttt{example} placeholder, we
-specify the number of features for each image, meaning the $28 \times 28 = 784$
+replacement values. For each such placeholder, we specify a shape and data
+type. By specifying the keyword \texttt{None} for the first dimension of each
+placeholder shape, we can later feed a tensor of variable size in that
+dimension. For the column size of the \texttt{example} placeholder, we specify
+the number of features for each image, meaning the $28 \times 28 = 784$
 pixels. The label placeholder should expect 10 columns, corresponding to the
 10-dimensional one-hot-encoded vector for each label digit:
-
+%
 \begin{lstlisting}
 # Using a 32-bit floating-point data type tf.float32
 examples = tf.placeholder(tf.float32, [None, 784])
 labels = tf.placeholder(tf.float32, [None, 10])
 \end{lstlisting}
-
+%
 Given an example matrix $\mathbf{X} \in \mathbb{R}^{n \times 784}$ containing
 $n$ images, the learning task then applies an affine transformation
 $\mathbf{X} \cdot \mathbf{W} + \mathbf{b}$, where $\mathbf{W}$ is a
@@ -82,7 +66,7 @@ $\mathbf{Y} \in \mathbb{R}^{n \times 10}$, containing the \emph{scores} or
 \emph{logits} of our model for each example and each possible digit. To
 transform the logits into a valid probability distribution, we then pass them
 through the softmax function:
-
+%
 \begin{lstlisting}
 # Draw random weights for symmetry breaking
 weights = tf.Variable(tf.random_uniform([784, 10]))
@@ -94,7 +78,7 @@ logits = tf.matmul(examples, weights) + bias
 # Applies the operation element-wise on tensors
 estimates = tf.nn.softmax(logits)
 \end{lstlisting}
-
+%
 Next, we compute our objective function, producing the error or \emph{loss} of
 the model given its current trainable parameters $\mathbf{W}$ and
 $\mathbf{b}$. We do this by calculating the \emph{cross entropy}
@@ -102,42 +86,40 @@ $H(\mathbf{L}, \mathbf{Y})_i = -\sum_j \mathbf{L}_{i,j} \cdot
 \log(\mathbf{Y}_{i,j})$ between the probability distributions of our estimates
 $\mathbf{Y}$ and the one-hot-encoded labels $\mathbf{L}$. More precisely, we
 consider the mean cross entropy over all examples as the loss:
-
+%
 \begin{lstlisting}
 # Computes the cross-entropy and sums the rows
 cross_entropy = -tf.reduce_sum(
     labels * tf.log(estimates), [1])
 loss = tf.reduce_mean(cross_entropy)
 \end{lstlisting}
-
+%
 Now that we have an objective function, we can run (stochastic) gradient descent
 to update the weights of our model. For this, TensorFlow provides a
 \texttt{GradientDescentOptimizer} class. It is initialized with the
 learning rate of the algorithm and provides an operation \texttt{minimize}, to
 which we pass our \texttt{loss} tensor. This is the operation we will run
 repeatedly in a \texttt{Session} environment to train our model:
-
+%
 \begin{lstlisting}
 # We choose a learning rate of 0.5
 gdo = tf.train.GradientDescentOptimizer(0.5)
 optimizer = gdo.minimize(loss)
 \end{lstlisting}
-
+%
 Finally, we can actually train our algorithm. For this, we enter a session
 environment using a \texttt{tf.Session} as a context manager. We pass our graph
 object to its constructor, so that it knows which graph to manage. To then
-execute nodes, we have several options. The most general way is to call
-\texttt{Session.run()} and pass a list of tensors we wish to
-compute. Alternatively, we may call \texttt{eval()} on tensors and
-\texttt{run()} on operations directly. Before evaluating any other node, we must
-first ensure that the variables in our graph are initialized. For this, we use
-the \texttt{tf.initialize\_all\_variables()} utility operation provided by
-TensorFlow, which in turn executes the \texttt{initializer} operation for each
-\texttt{Variable} in the graph. Then, we can perform a certain number of
-iterations of stochastic gradient descent, fetching an example and label
-mini-batch from the MNIST dataset each time and feeding it to the \texttt{run}
-function of our optimizer. At the end, our loss will (hopefully) be small:
-
+execute nodes, we use \texttt{Session.run()} and pass a list of tensors we wish
+to compute. Before evaluating any other node, we must first initialize the
+variables in our graph. We do this by \texttt{run}ning the
+\texttt{tf.initialize\_all\_variables()} utility operation. Then, we can perform
+a certain number of iterations of stochastic gradient descent, fetching an
+example and label mini-batch from the MNIST dataset each time and feeding it to
+the \texttt{run} routine. For this, we assume a utility object \texttt{mnist}
+which can be used as shown below. At the end, our loss will (hopefully) be
+small:
+%
 \begin{lstlisting}
 with tf.Session(graph=graph) as session:
     # Execute the operation directly
@@ -152,7 +134,7 @@ with tf.Session(graph=graph) as session:
         print('Loss at step {0}: {1}'
                 .format(step, loss_value))
 \end{lstlisting}
-
+%
 The full code listing for this example, along with some additional
 implementation to compute an accuracy metric at each time step is given in
 Appendix \ref{app:code}.

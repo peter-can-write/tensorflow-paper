@@ -19,33 +19,26 @@ non-linear transformations to the input data. Given enough such transformation
 modules, very complex functions may be modeled to solve classification,
 regression, transcription and numerous other learning tasks \cite{nature2015}.
 
-While deep learning algorithms and individual architectural components such as
-representation transformations, activation functions or regularization methods
-may initially be expressed in mathematical notation, they must eventually be
-transcribed into a computer program for real world usage. For this purpose,
-there exist a number of open source as well as commercial machine learning
-software libraries and frameworks. Among these are Theano \cite{theano}, Torch
-\cite{torch}, scikit-learn \cite{scikit} and many more, which we review in
-further detail in Section II of this paper. In November 2015, this list was
-extended by \emph{TensorFlow}, a novel machine learning software library
-released by Google \cite{tensorflow}. As per the initial publication, TensorFlow
-aims to be ``an interface for expressing machine learning algorithms'' in
-``large-scale [\dots] on heterogeneous distributed systems'' \cite{tensorflow}.
+For real world usage, deep learning algorithms must eventually be transcribed
+into a computer program. There exist a number of machine learning software
+libraries and frameworks for this purpose. Among these are Theano \cite{theano},
+Torch \cite{torch}, scikit-learn \cite{scikit} and many more. In November 2015,
+this list was extended by \emph{TensorFlow}, a novel machine learning software
+library released by Google \cite{tensorflow}. As per the initial publication,
+TensorFlow aims to be ``an interface for expressing machine learning
+algorithms'' in ``large-scale [\dots] on heterogeneous distributed systems''
+\cite{tensorflow}.
 
 The remainder of this paper aims to give a thorough review of TensorFlow and put
 it in context of the current state of machine learning. In detail, the paper is
-further structured as follows. Section \ref{sec:history} will provide a brief
-overview and history of machine learning software libraries, listing but not
-comparing projects similar to TensorFlow. Subsequently, Section \ref{sec:model}
-discusses in depth the computational paradigms underlying TensorFlow. In Section
-\ref{sec:code} we explain the current programming interface in the various
-supported languages. To inspect and debug models expressed in TensorFlow, there
-exist powerful visualization tools, which we examine in Section
-\ref{sec:visual}. Section \ref{sec:comp} then gives a comparison of TensorFlow
-and alternative deep learning libraries on a qualitative as well as quantitative
-basis. Before concluding our review in Section \ref{sec:conclusion}, Section
-\ref{sec:uses} studies current real world use cases of TensorFlow in literature
-and industry.
+further structured as follows. Section \ref{sec:model} discusses in depth the
+computational paradigms underlying TensorFlow. In Section \ref{sec:code} we then
+explain the current programming interface. Tools allowing to visualize models
+built with TensorFlow are studied in Section \ref{sec:visual}. Subsequently,
+Section \ref{sec:comp} compares TensorFlow to alternative deep learning
+libraries on a quantitative basis. Before concluding our review in Section
+\ref{sec:conclusion}, Section \ref{sec:uses} investigates current real world use
+cases of TensorFlow in literature and industry.
 
 %%% Local Variables:
 %%% mode: latex
