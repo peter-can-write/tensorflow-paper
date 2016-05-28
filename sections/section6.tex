@@ -2,22 +2,16 @@
 
 In this section, we investigate where TensorFlow is already in use today. Given
 that TensorFlow was released only little over 6 months ago as of this writing,
-its adoption in academia and industry is not yet widespread. Migration from an
-existing system based on some other library within small and large organizations
-necessarily takes time and consideration, so this is not unexpected. The one
-exception is, of course, Google, which has already deployed TensorFlow for a
-variety of learning tasks \cite{drugs, phones, emails, deepmind, inception}. We
-begin with a review of selected mentions of TensorFlow in literature. Then, we
-discuss where and how TensorFlow is used in industry.
+its adoption in academia and industry is not yet widespread. The one exception
+is, of course, Google, which has already deployed TensorFlow for a variety of
+learning tasks \cite{phones, emails, drugs, inception}.
 
-\subsection{In Literature}\label{sec:uses-lit}
-
-The first noteworthy mention of TensorFlow is \cite{szegedy2016}, published by
-Szegedy, Ioffe and Vanhoucke of the Google Brain Team in February 2016. In their
-work, the authors use TensorFlow to improve on the \emph{Inception} model
-\cite{inception}, which achieved best performance at the 2014 ImageNet
-classification challenge. The authors report a 3.08\% top-5 error on the
-ImageNet test set.
+The first noteworthy mention of TensorFlow in literature is \cite{szegedy2016},
+published by Szegedy, Ioffe and Vanhoucke of the Google Brain Team in February
+2016. In their work, the authors use TensorFlow to improve on the
+\emph{Inception} model \cite{inception}, which achieved best performance at the
+2014 ImageNet classification challenge. The authors report a 3.08\% top-5 error
+on the ImageNet test set.
 
 In \cite{drugs}, Ramsundar et al. discuss massively ``multitask networks for
 drug discovery'' in a joint collaboration work between Stanford University and
@@ -32,31 +26,6 @@ optimizing dynamic decoupling, a technique for suppressing errors in quantum
 memory \cite{august}. With this, the authors aim to preserve the coherence of
 quantum states, which is one of the primary requirements for building universal
 quantum computers.
-
-\subsection{In Industry}\label{sec:uses-industry}
-
-Adoption of TensorFlow in industry is currently limited only to Google, at least
-to the extent that is publicly known. We have found no evidence of any other
-small or large corporation stating its use of TensorFlow. As mentioned, we link
-this to TensorFlow's late release. Moreover, it is obvious that many companies
-would not make their machine learning methods public even if they do use
-TensorFlow. For this reason, we will review uses of TensorFlow only within
-Google, Inc.
-
-Another area where Google applies deep learning with TensorFlow is smart email
-replies \cite{emails}. Google has investigated and already deployed a feature
-whereby its email service \emph{Inbox} suggests possible replies to received
-email. The system uses recurrent neural networks and in particular LSTM modules
-for sequence-to-sequence learning and natural language understanding. An encoder
-maps a corpus of text to a ``thought vector'' while a decoder synthesizes
-syntactically and semantically correct replies from it, of which a selection is
-presented to the user.
-
-In \cite{phones} it is reported how Google employs convolutional neural networks
-for image recognition and automatic text translation. As a feature integrated
-into its Google Translate mobile app, text in a language foreign to the user is
-first recognized, then translated and finally rendered on top of the original
-image. In this way, for example, street signs can be translated.
 
 Lastly, we make note of the decision of Google DeepMind, an AI division within
 Google, to move from Torch7 to TensorFlow \cite{deepmind}. A related source,

@@ -3,14 +3,11 @@
 In this section we provide an in-depth discussion of the abstract computational
 principles underlying the TensorFlow software library. We begin with a thorough
 examination of the basic structural and architectural decisions made by the
-TensorFlow development team and explain how machine learning algorithms may be
-expressed in its dataflow graph language. Subsequently, we study TensorFlow's
-execution model and provide insight into the way TensorFlow graphs are assigned
-to available hardware units in a local as well as distributed environment. Then,
-we investigate the various optimizations incorporated into TensorFlow, targeted
-at improving both software and hardware efficiency. Lastly, we list extensions
-to the basic programming model that aid the user in both computational as well
-as logistical aspects of training a machine learning model with TensorFlow.
+TensorFlow development team. Subsequently, we study TensorFlow's execution model
+and provide insight into the way TensorFlow graphs are assigned to available
+hardware units in a local as well as distributed environment. Lastly, we
+investigate how TensorFlow implements back-propagation, a crucial step for many
+machine learning algorithms.
 
 \subsection{Computational Graph Architecture}\label{sec:model-graphs}
 
@@ -111,14 +108,8 @@ data flowing through the graph \cite{tensorflow}. An operation can have
 \emph{zero or more} inputs and produce \emph{zero or more} outputs. As such, an
 operation may represent a mathematical equation, a variable or constant, a
 control flow directive, a file I/O operation or even a network communication
-port. It may seem unintuitive that an operation, which the reader may associate
-with a \emph{function} in the mathematical sense, can represent a constant or
-variable. However, a constant may be thought of as an operation that takes no
-inputs and always produces the same output corresponding to the constant it
-represents. Analogously, a variable is really just an operation taking no input
-and producing the current state or value of that variable. Table \ref{tab:ops}
-gives an overview of different kinds of operations that may be declared in a
-TensorFlow graph.
+port. Table \ref{tab:ops} gives an overview of different kinds of operations
+that may be declared in a TensorFlow graph.
 
 \begin{table}[b!]
   \begin{tabular}{ll}
@@ -147,14 +138,9 @@ a certain kind of device, such as a CPU, GPU or other hardware unit.
 \subsubsection{Tensors}\label{sec:model-graphs-tensors}
 
 In TensorFlow, edges represent data flowing from one operation to another and
-are referred to as \emph{tensors}. A tensor is a multi-dimensional collection of
-homogeneous values with a fixed, static type. The number of dimensions of a
-tensor is termed its \emph{rank}. A tensor's \emph{shape} is the tuple
-describing its size, i.e. the number of components, in each dimension. In the
-mathematical sense, a tensor is the generalization of two-dimensional matrices,
-one-dimensional vectors and also scalars, which are simply tensors of rank zero.
-
-In terms of the computational graph, a tensor can be seen as a \emph{symbolic
+are referred to as \emph{tensors}. In the mathematical sense, a tensor is a
+multi-dimensional collection of homogeneous values with a fixed, static type. In
+terms of the computational graph, a tensor can be seen as a \emph{symbolic
   handle} to one of the outputs of an operation. A tensor itself does not hold
 or store values in memory, but provides only an interface for retrieving the
 value referenced by the tensor. When creating an operation in the TensorFlow
@@ -162,10 +148,6 @@ programming environment, such as for the expression $x + y$, a tensor object is
 returned. This tensor may then be supplied as input to other computations,
 thereby connecting the source and destination operations with an edge. By these
 means, data flows through a TensorFlow graph.
-
-Next to regular tensors, TensorFlow also provides a \texttt{SparseTensor}
-data structure, allowing for a more space-efficient dictionary-like
-representation of \emph{sparse tensors} with only few non-zeros entries.
 
 \subsubsection{Variables}\label{sec:model-graphs-vars}
 
@@ -199,8 +181,8 @@ supplied to \texttt{run} as well \cite{tensorflow}.
 
 Upon invocation of \texttt{run}, TensorFlow will start at the requested output
 nodes and work backwards, examining the graph dependencies and computing the
-full transitive closure of all nodes that must be executed. These nodes may then
-be assigned to one or many physical execution units (CPUs, GPUs etc.) on one or
+full transitive closure of all nodes that must be executed. These nodes are then
+assigned to one or many physical execution units (CPUs, GPUs etc.) on one or
 many machines. The rules by which this assignment takes place are determined by
 TensorFlow's \emph{placement algorithm}, discussed in detail in Subsection
 \ref{subsec:model-exec}. Furthermore, as there exists the possibility to specify
@@ -279,12 +261,6 @@ a custom built ASIC (application-specific-integrated-circuit) optimized
 specifically for fast tensor computations \cite{tpu}. It is thus understandably
 easy to integrate new device classes as novel hardware emerges.
 
-To oversee the evaluation of nodes on a device, a worker process is spawned by
-the master. As a worker process may manage one or many devices on a single
-machine, a device is identified not only by a name, but also an index for its
-worker group. For example, the first CPU in a particular group may be identified
-by the string ``/cpu:0''.
-
 \subsubsection{Placement Algorithm}\label{sec:model-exec-placement}
 
 To determine what nodes to assign to which device, TensorFlow makes use of a
@@ -318,32 +294,22 @@ one per device. As a consequence, there may be cross-device dependencies between
 nodes that must be handled via a number of additional steps. Let us consider for
 this two devices $A$ and $B$ with particular focus on a node $\nu$ on device
 $A$. If $\nu$'s output tensor forms the input to some other operations
-$\alpha, \beta$ on device $B$, there initially exist cross-device edges
+$\alpha, \beta$ on device $B$, there conceptually exist cross-device edges
 $\nu \rightarrow \alpha$ and $\nu \rightarrow \beta$ from device $A$ to device
 $B$. This is visualized in Figure \ref{fig:cross-a}.
 
 In practice, there must be some means of transmitting $\nu$'s output tensor from
 $A$, say a GPU device, to $B$ --- maybe a CPU device. For this reason,
-TensorFlow initially replaces the two edges $\nu \rightarrow \alpha$ and
-$\nu \rightarrow \beta$ by three new nodes. On device $A$, a \texttt{send} node
-is placed and connected to $\nu$. In tandem, on device $B$, two \texttt{recv}
-nodes are instantiated and attached to $\alpha$ and $\beta$, respectively. The
-\texttt{send} and \texttt{recv} nodes are then connected by two additional
-edges. This step is shown in Figure \ref{fig:cross-b}. During execution of the
-graph, cross-device communication of data occurs exclusively via these special
-nodes. When the devices are located on separate machines, transmission between
-the worker processes on these machines may involve remote communication
-protocols such as TCP or RDMA.
-
-Finally, an important optimization made by TensorFlow at this step is
-``canonicalization'' of $(\mathtt{send}, \mathtt{receive})$ pairs. In the setup
-displayed in Figure \ref{fig:cross-b}, the existence of each \texttt{recv} node
-on device $B$ would imply allocation and management of a separate buffer to
-store $\nu$'s output tensor, so that it may then be fed to nodes $\alpha$ and
-$\beta$, respectively. However, an equivalent and more efficient transformation
-places only one \texttt{recv} node on device $B$, streams all output from $\nu$
-to this single node, and then to the two dependent nodes $\alpha$ and
-$\beta$. This last and final evolution is given in Figure \ref{fig:cross-c}.
+TensorFlow replaces the two edges $\nu \rightarrow \alpha$ and
+$\nu \rightarrow \beta$ by two new nodes. On device $A$, a \texttt{send} node is
+placed and connected to $\nu$. In tandem, on device $B$, a \texttt{recv} node is
+instantiated and attached to $\alpha$ and $\beta$. The \texttt{send} and
+\texttt{recv} nodes are then connected by an additional edge. This is shown in
+Figure \ref{fig:cross-b}. During execution of the graph, cross-device
+communication of data occurs exclusively via these special nodes. When the
+devices are located on separate machines, transmission between the worker
+processes on these machines may involve remote communication protocols such as
+TCP or RDMA.
 
 \begin{figure}
   \centering
@@ -374,46 +340,6 @@ $\beta$. This last and final evolution is given in Figure \ref{fig:cross-c}.
     \end{tikzpicture}
     \caption{}
     \label{fig:cross-a}
-  \end{subfigure}
-  %
-  \begin{subfigure}[b]{0.30\textwidth}
-    \begin{tikzpicture}
-      % Device A
-      \draw [very thick] (0, 0) rectangle (2, 1);
-      \draw (1, -0.4) node {Device $A$};
-      \draw [thick] (0.4, 0.5) circle [radius=0.25] node {$\nu$};
-
-      % Device B
-      \draw [very thick] (4, -0.5) rectangle (6.5, 1.5);
-      \draw (5.25, -0.9) node {Device $B$};
-      \draw [thick] (5.9, 0.05) circle [radius=0.25] node {$\beta$};
-      \draw [thick] (5.9, 0.95) circle [radius=0.25] node {$\alpha$};
-
-      % Send Nodes
-      \draw [thick] (1.1, 0.3) rectangle ++(0.75, 0.4) node [midway]
-      {\footnotesize\texttt{send}};
-      \draw [very thick, -stealth] (0.7, 0.5) -- (1.1, 0.5);
-
-      % Receive Nodes
-      \draw [thick] (4.4, 0.75) rectangle ++(0.75, 0.4) node [midway]
-      {\footnotesize\texttt{recv}};
-      \draw [very thick, -stealth] (5.15, 0.95) -- ++(0.5, 0);
-      \draw [thick] (4.4, -0.15) rectangle ++(0.75, 0.4) node [midway]
-      {\footnotesize\texttt{recv}};
-      \draw [very thick, -stealth] (5.15, 0.05) -- ++(0.5, 0);
-
-      % Edges
-      % nu -> beta
-      \draw [very thick, -stealth] (1.85, 0.5)
-            .. controls (2.5, 0.5) and (3, 1.1)
-            ..         (4.38, 0.95);
-      % nu -> alpha
-      \draw [very thick, -stealth] (1.85, 0.5)
-            .. controls (2.5, 0.5) and (3, -0.1)
-            ..          (4.38, 0.05);
-    \end{tikzpicture}
-    \caption{}
-    \label{fig:cross-b}
   \end{subfigure}
   %
   \begin{subfigure}[h]{0.30\textwidth}
@@ -448,15 +374,13 @@ $\beta$. This last and final evolution is given in Figure \ref{fig:cross-c}.
       \draw [very thick, -stealth] (1.85, 0.475) -- (4.4, 0.475);
     \end{tikzpicture}
     \caption{}
-    \label{fig:cross-c}
+    \label{fig:cross-b}
   \end{subfigure}
-  \caption{The three stages of cross-device communication between graph nodes in
-    TensorFlow. Figure \ref{fig:cross-a} shows the initial, conceptual
-    connections between nodes on different devices. Figure \ref{fig:cross-b}
-    gives a more practical overview of how data is actually transmitted across
-    devices using \texttt{send} and \texttt{recv} nodes. Lastly, Figure
-    \ref{fig:cross-c} shows the final, canonicalized setup, where there is at
-    most one \texttt{recv} node per destination device.}
+  \caption{A conceptual and practical visualization of cross-device
+    communication. Figure \ref{fig:cross-a} shows the conceptual connections
+    between nodes on different devices. Figure \ref{fig:cross-b} gives a more
+    practical overview of how data is actually transmitted across devices using
+    \texttt{send} and \texttt{recv} nodes.}
   \label{fig:cross}
 \end{figure}
 
@@ -464,33 +388,23 @@ $\beta$. This last and final evolution is given in Figure \ref{fig:cross-c}.
 
 In a large number of deep learning and other machine learning algorithms, it is
 necessary to compute the gradients of particular nodes of the computational
-graph with respect to one or many other nodes. For example, in a neural network,
-we may compute the cost $c$ of the model for a given example $x$ by passing that
-example through a series of non-linear transformations. If the neural network
-consists of two hidden layers represented by functions $f(x;w) = f_x(w)$ and
-$g(x;w) = g_x(w)$ with internal weights $w$, we can express the cost for that
-example as $c = (f_x \circ g_x)(w) = f_x(g_x(w))$. We would then typically
-calculate the gradient $dc/dw$ of that cost with respect to the weights and use
-it to update $w$. Often, this is done by means of the \emph{back-propagation}
-algorithm, which traverses the graph in reverse to compute the chain rule
-$[f_x(g_x(w))]' = f_x'(g_x(w)) \cdot g_x'(w)$.
-
-In \cite{goodfellow2016}, two approaches for back-propagating gradients through
-a computational graph are described. The first, which the authors refer to as
-\emph{symbol-to-number differentiation}, receives a set of input values and then
-computes the \emph{numerical values} of the gradients at those input values. It
-does so by explicitly traversing the graph first in the forward order
-(forward-propagation) to compute the cost, then in reverse order
-(back-propagation) to compute the gradients via the chain rule. Another
-approach, more relevant to TensorFlow, is what \cite{goodfellow2016} calls
-\emph{symbol-to-symbol derivatives} and \cite{tensorflow} terms \emph{automatic
-  gradient computation}. In this case, gradients are not computed by an explicit
-implementation of the back-propagation algorithm. Rather, special nodes are added
-to the computational graph that calculate the gradient of each operation and
-thus ultimately the chain rule. To perform back-propagation, these nodes must
-then simply be executed like any other nodes by the graph evaluation engine. As
-such, this approach does not produce the desired derivatives as a numeric value,
-but only as a \emph{symbolic handle} to compute those values.
+graph with respect to one or many other nodes. In \cite{goodfellow2016}, two
+approaches for back-propagating gradients through a computational graph are
+described. The first, which the authors refer to as \emph{symbol-to-number
+  differentiation}, receives a set of input values and then computes the
+\emph{numerical values} of the gradients at those input values. It does so by
+explicitly traversing the graph first in the forward order (forward-propagation)
+to compute the cost, then in reverse order (back-propagation) to compute the
+gradients via the chain rule. Another approach, more relevant to TensorFlow, is
+what \cite{goodfellow2016} calls \emph{symbol-to-symbol derivatives} and
+\cite{tensorflow} terms \emph{automatic gradient computation}. In this case,
+gradients are not computed by an explicit implementation of the back-propagation
+algorithm. Rather, special nodes are added to the computational graph that
+calculate the gradient of each operation and thus ultimately the chain rule. To
+perform back-propagation, these nodes must then simply be executed like any
+other nodes by the graph evaluation engine. As such, this approach does not
+produce the desired derivatives as a numeric value, but only as a \emph{symbolic
+  handle} to compute those values.
 
 When TensorFlow needs to compute the gradient of a particular node $\nu$ with
 respect to some other tensor $\alpha$, it traverses the graph in reverse order
@@ -502,10 +416,8 @@ for each such operation $o$ that takes the gradient of the previous link (the
 outer function) and multiplies it with its own gradient. At the end of the
 traversal, there will be a node providing a symbolic handle to the overall
 target derivative $\frac{d\nu}{d\alpha}$, which \emph{implicitly} implements the
-back-propagation algorithm. It should now be clear that back-propagation in this
-symbol-to-symbol approach is \emph{just another operation}, requiring no
-exceptional handling. Figure \ref{fig:gradients} shows how a computational graph
-may look before and after gradient nodes are added.
+back-propagation algorithm. Figure \ref{fig:gradients} shows how a computational
+graph may look before and after gradient nodes are added.
 
 \begin{figure}
   \centering
@@ -587,36 +499,6 @@ may look before and after gradient nodes are added.
     handling by the graph evaluation engine.}
   \label{fig:gradients}
 \end{figure}
-
-In \cite{tensorflow} it is noted that symbol-to-symbol derivatives may incur a
-considerable performance cost and especially result in increased memory
-overhead. To see why, it is important to understand that there exist two
-equivalent formulations of the chain rule. The first reuses previous
-computations and therefore requires them to be stored longer than strictly
-necessary for forward-propagation. For arbitrary functions $f$, $g$ and $h$ it is
-given in Equation \ref{eq:chain-reuse}:
-\begin{equation}\label{eq:chain-reuse}
-  \frac{\mathrm{d} f}{\mathrm{d} w} = f'(y) \cdot g'(x) \cdot h'(w) \text{ with } y = g(x), x =
-  h(w)
-\end{equation}
-The second possibility for computing the chain rule was already shown, where
-each function recomputes all of its arguments and invokes every function it
-depends on. It is given in Equation \ref{eq:chain-recomp} for reference:
-\begin{equation}\label{eq:chain-recomp}
-  \frac{\mathrm{d} f}{\mathrm{d} w} = f'(g(h(w))) \cdot g'(h(w)) \cdot h'(w)
-\end{equation}
-According to \cite{tensorflow}, TensorFlow currently employs the first
-approach. Given that the inner-most functions must be recomputed for almost
-every link of the chain if this approach is not employed, and taking into
-consideration that this chain may consist of many hundreds or thousands of
-operations, this choice seems sensible. However, on the flip side, keeping
-tensors in memory for long periods of time is also not optimal, especially on
-devices like GPUs where memory resources are scarce. For Equation
-\ref{eq:chain-recomp}, memory held by tensors could in theory be freed as soon
-as it has been processed by its graph dependencies. For this reason, in
-\cite{tensorflow} the development team of TensorFlow states that recomputing
-certain tensors rather than keeping them in memory may be a possible performance
-improvement for the future.
 
 %%% Local Variables:
 %%% mode: latex

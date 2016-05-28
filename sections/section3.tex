@@ -18,11 +18,6 @@ Buffer\footnote{https://developers.google.com/protocol-buffers/} format. While
 there is experimental support for also building computational graphs in C++,
 this functionality is currently not as extensive as in Python.
 
-It is noteworthy that the Python API integrates very well with
-NumPy\footnote{http://www.numpy.org}, a popular open source Python numeric and
-scientific programming library. As such, TensorFlow tensors may be interchanged
-with NumPy \texttt{ndarrays} in many places.
-
 \subsection{Walkthrough}\label{sec:code-walk}
 
 In the following paragraphs we give a step-by-step walkthrough of a practical,
@@ -31,23 +26,15 @@ multi-layer perceptron (MLP) with one input and one output layer to classify
 handwritten digits in the MNIST\footnote{http://yann.lecun.com/exdb/mnist/}
 dataset. In this dataset, the examples are small images of $28 \times 28$ pixels
 depicting handwritten digits in $\in \{0, \dots, 9\}$. We receive each such
-example as a flattened vector of $784$ gray-scale pixel intensities. The label
-for each example is the digit it is supposed to represent.
+example as a flattened vector of $28 \times 28 = 784$ gray-scale pixel
+intensities. The label for each example is a \emph{one-hot-encoded} vector
+$(d_1, \dots, d_{10})^\top$ where the $i$-th component is set to one while all
+others are zero if the image shows the digit $i$.
 
-We begin our walkthrough by importing the TensorFlow library and reading the
-MNIST dataset into memory. For this we assume a utility module
-\texttt{mnist\_data} with a method \texttt{read} which expects a path to extract
-and store the dataset. Moreover, we pass the parameter \texttt{one\_hot=True} to
-specify that each label be given to us as a \emph{one-hot-encoded} vector
-$(d_1, \dots, d_{10})^\top$ where all but the $i$-th component are set to zero
-if an example represents the digit $i$:
+To begin our walkthrough, we first import the TensorFlow library:
 
 \begin{lstlisting}
 import tensorflow as tf
-
-# Download and extract the MNIST data set.
-# Retrieve the labels as one-hot-encoded vectors.
-mnist = mnist_data.read("/tmp/mnist", one_hot=True)
 \end{lstlisting}
 
 Next, we create a new computational graph via the \texttt{tf.Graph}
@@ -88,18 +75,13 @@ labels = tf.placeholder(tf.float32, [None, 10])
 
 Given an example matrix $\mathbf{X} \in \mathbb{R}^{n \times 784}$ containing
 $n$ images, the learning task then applies an affine transformation
-$\mathbf{X} \cdot \mathbf{W} + \mathbf{b}$, where $\mathbf{W}$ is a \emph{weight}
-  matrix $\in \mathbb{R}^{784 \times 10}$ and $\mathbf{b}$ a \emph{bias} vector
-$\in \mathbb{R}^{10}$. This yields a new matrix
+$\mathbf{X} \cdot \mathbf{W} + \mathbf{b}$, where $\mathbf{W}$ is a
+\emph{weight} matrix $\in \mathbb{R}^{784 \times 10}$ and $\mathbf{b}$ a
+\emph{bias} vector $\in \mathbb{R}^{10}$. This yields a new matrix
 $\mathbf{Y} \in \mathbb{R}^{n \times 10}$, containing the \emph{scores} or
-\emph{logits} of our model for each example and each possible digit. These
-scores are more or less arbitrary values and not a probability distribution,
-i.e. they need neither be $\in [0, 1]$ nor sum to one. To transform the logits
-into a valid probability distribution, giving the likelihood $\Pr[x = i]$ that
-the $x$-th example represents the digit $i$, we make use of the softmax
-function, given in Equation \ref{eq:softmax}. Our final estimates are thus
-calculated by $\softmax(\mathbf{X} \cdot \mathbf{W} + \mathbf{b})$, as shown
-below:
+\emph{logits} of our model for each example and each possible digit. To
+transform the logits into a valid probability distribution, we then pass them
+through the softmax function:
 
 \begin{lstlisting}
 # Draw random weights for symmetry breaking
@@ -112,10 +94,6 @@ logits = tf.matmul(examples, weights) + bias
 # Applies the operation element-wise on tensors
 estimates = tf.nn.softmax(logits)
 \end{lstlisting}
-
-\begin{equation}\label{eq:softmax}
-  \softmax(\mathbf{x})_i = \frac{\exp(\mathbf{x}_i)}{\sum_j \exp(\mathbf{x}_j)}
-\end{equation}
 
 Next, we compute our objective function, producing the error or \emph{loss} of
 the model given its current trainable parameters $\mathbf{W}$ and
@@ -152,10 +130,8 @@ execute nodes, we have several options. The most general way is to call
 \texttt{Session.run()} and pass a list of tensors we wish to
 compute. Alternatively, we may call \texttt{eval()} on tensors and
 \texttt{run()} on operations directly. Before evaluating any other node, we must
-first ensure that the variables in our graph are initialized. Theoretically, we
-could \texttt{run} the \texttt{Variable.initializer} operation for each
-variable. However, one most often just uses the
-\texttt{tf.initialize\_all\_variables()} utility operation provided by
+first ensure that the variables in our graph are initialized. For this, we use
+the \texttt{tf.initialize\_all\_variables()} utility operation provided by
 TensorFlow, which in turn executes the \texttt{initializer} operation for each
 \texttt{Variable} in the graph. Then, we can perform a certain number of
 iterations of stochastic gradient descent, fetching an example and label
