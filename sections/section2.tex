@@ -184,54 +184,6 @@ certain shape and a fixed type. To manipulate and update variables manually (as
 opposed to implicitly by certain library routines), TensorFlow provides the
 \texttt{assign} family of graph operations.
 
-When creating a variable node for a TensorFlow graph, it is necessary to supply
-a tensor with which the variable is initialized upon graph execution. The shape
-and data type of the variable is then deduced from this
-initializer. Interestingly, the variable itself does not store this initial
-tensor. Rather, constructing a variable results in the addition of \emph{three}
-distinct nodes to the graph:
-
-\begin{enumerate}
-  \item The actual variable node, holding the mutable state.
-  \item An operation producing the initial value, often a constant.
-  \item An \emph{initializer} operation, that \texttt{assign}s the initial value
-    to the variable tensor upon evaluation of the graph.
-\end{enumerate}
-
-An example for this is given in Figure \ref{fig:variable}.
-
-\begin{figure}
-  \centering
-    \begin{tikzpicture}
-    % Result
-    \draw [very thick] (1, 2) circle [radius=0.5cm] node {$v'$};
-
-    % Input Nodes
-    \draw [very thick] (0, 0) circle [radius=0.5cm] node {$v$};
-    \draw [very thick] (2, 0) circle [radius=0.5cm] node {$i$};
-
-    % Edges
-    \draw [very thick, -stealth] (0, 0.5) -- ++(60:1.29);
-    \draw [very thick, -stealth] (2, 0.5) -- ++(120:1.29);
-
-    % Operation Label
-    \draw (2.5, 2) node {\texttt{assign}};
-
-    % Figure Label
-    \draw (1, -1) node {$v = i$};
-  \end{tikzpicture}
-  \caption{The three nodes that are added to the computational graph for every
-    variable definition. The first, $v$, is the variable operation that holds a
-    mutable in-memory buffer containing the value tensor of the variable. The
-    second, $i$, is the node producing the initial value for the variable, which
-    can be any tensor. Lastly, the \texttt{assign} node will set the variable to
-    the initializer's value when executed. The \texttt{assign} node also
-    produces a tensor referencing the initialized value $v'$ of the variable,
-    such that it may be connected to other nodes as necessary (e.g. when using a
-    variable as the initializer for another variable).}
-  \label{fig:variable}
-\end{figure}
-
 \subsubsection{Sessions}\label{sec:model-graphs-sessions}
 
 In TensorFlow, the execution of operations and evaluation of tensors may only be
@@ -378,7 +330,7 @@ is placed and connected to $\nu$. In tandem, on device $B$, two \texttt{recv}
 nodes are instantiated and attached to $\alpha$ and $\beta$, respectively. The
 \texttt{send} and \texttt{recv} nodes are then connected by two additional
 edges. This step is shown in Figure \ref{fig:cross-b}. During execution of the
-graph, cross-device communication of data occurrs exclusively via these special
+graph, cross-device communication of data occurs exclusively via these special
 nodes. When the devices are located on separate machines, transmission between
 the worker processes on these machines may involve remote communication
 protocols such as TCP or RDMA.
@@ -508,18 +460,7 @@ $\beta$. This last and final evolution is given in Figure \ref{fig:cross-c}.
   \label{fig:cross}
 \end{figure}
 
-\subsection{Additions to the Basic Programming Model}\label{sec:model-ext}
-
-Having discussed the basic computational paradigms and execution model of
-TensorFlow, we will now review three more advanced topics that we deem highly
-relevant for anyone wishing to use TensorFlow to create machine learning
-algorithms. First, we discuss how TensorFlow handles \emph{gradient
-  back-propagation}, an essential concept for many deep learning
-applications. Then, we study how TensorFlow graphs support \emph{control
-  flow}. Lastly, we briefly touch upon the topic of \emph{checkpoints}, as they
-are very useful for maintenance of large models.
-
-\subsubsection{Back-Propagation Nodes}\label{sec:model-ext-backprop}
+\subsection{Back-Propagation in TensorFlow}\label{sec:model-ext-backprop}
 
 In a large number of deep learning and other machine learning algorithms, it is
 necessary to compute the gradients of particular nodes of the computational
@@ -676,31 +617,6 @@ as it has been processed by its graph dependencies. For this reason, in
 \cite{tensorflow} the development team of TensorFlow states that recomputing
 certain tensors rather than keeping them in memory may be a possible performance
 improvement for the future.
-
-\subsubsection{Control Flow}\label{sec:model-ext-flow}
-
-Some machine learning algorithms may benefit from being able to control the flow
-of their execution, performing certain steps only under a particular condition
-or repeating some computation a fixed or variable number of times. For this,
-TensorFlow provides a set of control flow primitives including
-\texttt{if}-conditionals and \texttt{while}-loops. The possibility of loops is
-the reason why a TensorFlow computational graph is not necessarily
-\emph{acyclic}. If the number of iterations for of a loop would be fixed and
-known at graph compile-time, its body could be \emph{unrolled} into an acyclic
-sequence of computations, one per loop iteration \cite{theano}. However, to
-support a variable amount of iterations, TensorFlow is forced to jump through an
-additional set of hoops, as described in \cite{tensorflow}.
-
-One aspect that must be especially cared for when introducing control flow is
-back-propagation. In the case of a conditional, where an \texttt{if}-operation
-returns either one or the other tensor, it must be known which branch was taken
-by the node during forward-propagation so that gradient nodes are added only to
-this branch. Moreover, when a loop body (which may be a small graph) was
-executed a certain number of times, the gradient computation does not only need
-to know the number of iterations performed, but also requires access to each
-intermediary value produced. This technique of stepping through a loop in
-reverse to compute the gradients is referred to as \emph{back-propagation
-  through time} in \cite{theano}.
 
 %%% Local Variables:
 %%% mode: latex
