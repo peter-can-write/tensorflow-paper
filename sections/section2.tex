@@ -17,14 +17,14 @@ as logistical aspects of training a machine learning model with TensorFlow.
 In TensorFlow, machine learning algorithms are represented as
 \emph{computational graphs}. A computational or \emph{dataflow} graph is a form
 of directed graph where \emph{vertices} or \emph{nodes} describe operations,
-while \emph{edges} or \emph{arcs} represent data flowing between these
-operations. If an output variable $z$ is the result of applying a binary
-operation to two inputs $x$ and $y$, then we draw directed edges from $x$ and
-$y$ to an output node representing $z$ and annotate the vertex with a label
-describing the performed computation. Examples for computational graphs are
-given in Figure \ref{fig:graphs}. The following paragraphs discuss the principle
-elements of such a dataflow graph, namely \emph{operations}, \emph{tensors},
-\emph{variables} and \emph{sessions} in further detail.
+while \emph{edges} represent data flowing between these operations. If an output
+variable $z$ is the result of applying a binary operation to two inputs $x$ and
+$y$, then we draw directed edges from $x$ and $y$ to an output node representing
+$z$ and annotate the vertex with a label describing the performed
+computation. Examples for computational graphs are given in Figure
+\ref{fig:graphs}. The following paragraphs discuss the principle elements of
+such a dataflow graph, namely \emph{operations}, \emph{tensors},
+\emph{variables} and \emph{sessions}.
 
 \begin{figure}
   \begin{tikzpicture}
