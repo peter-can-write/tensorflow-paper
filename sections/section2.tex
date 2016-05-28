@@ -792,20 +792,16 @@ equivalent formulations of the chain rule. The first reuses previous
 computations and therefore requires them to be stored longer than strictly
 necessary for forward-propagation. For arbitary functions $f$, $g$ and $h$ it is
 given in Equation \ref{eq:chain-reuse}:
-
 \begin{equation}\label{eq:chain-reuse}
   \frac{\mathrm{d} f}{\mathrm{d} w} = f'(y) \cdot g'(x) \cdot h'(w) \text{ with } y = g(x), x =
   h(w)
 \end{equation}
-
 The second possibility for computing the chain rule was already shown, where
 each function recomputes all of its arguments and invokes every function it
 depends on. It is given in Equation \ref{eq:chain-recomp} for reference:
-
 \begin{equation}\label{eq:chain-recomp}
   \frac{\mathrm{d} f}{\mathrm{d} w} = f'(g(h(w))) \cdot g'(h(w)) \cdot h'(w)
 \end{equation}
-
 According to \cite{tensorflow}, TensorFlow currently employs the first
 approach. Given that the inner-most functions must be recomputed for almost
 every link of the chain if this approach is not employed, and taking into
