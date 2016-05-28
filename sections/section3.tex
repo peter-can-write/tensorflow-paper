@@ -4,10 +4,7 @@ Having conveyed the abstract concepts of TensorFlow's computational model in
 Section \ref{sec:model}, we will now concretize those ideas and speak to
 TensorFlow's programming interface. We begin with a brief discussion of the
 available language interfaces. Then, we provide a more hands-on look at
-TensorFlow's Python API by walking through a simple practical example. Lastly,
-we give insight into what higher-level abstractions exist for TensorFlow's API,
-which are especially beneficial for rapid prototyping of machine learning
-models.
+TensorFlow's Python API by walking through a simple practical example.
 
 \subsection{Interfaces}\label{sec:code-interfaces}
 
@@ -183,67 +180,6 @@ with tf.Session(graph=graph) as session:
 The full code listing for this example, along with some additional
 implementation to compute an accuracy metric at each time step is given in
 Appendix \ref{app:code}.
-
-\subsection{Abstractions}\label{sec:code-abstract}
-
-You may have observed how a relatively large amount of effort was required to
-create just a very simple two-layer neural network. Given that \emph{deep}
-learning, by implication of its name, makes use of \emph{deep} neural networks
-with many hidden layers, it may seem infeasible to each time create weight and
-bias variables, perform a matrix multiplication and addition and finally apply
-some non-linear activation function. When testing ideas for new deep learning
-models, scientists often wish to rapidly prototype networks and quickly exchange
-layers. In that case, these many steps may seem very low-level, repetitive and
-generally cumbersome. For this reason, there exist a number of open source
-libraries that \emph{abstract} these concepts and provide higher-level building
-blocks, such as entire layers. We find
-\emph{PrettyTensor}\footnote{https://github.com/google/prettytensor},
-\emph{TFLearn}\footnote{https://github.com/tflearn/tflearn} and
-\emph{Keras}\footnote{http://keras.io} especially noteworthy. The following
-paragraphs give a brief overview of the first two abstraction libraries.
-
-\subsubsection{PrettyTensor}\label{sec:code-abstract-prettytensor}
-
-PrettyTensor is developed by Google and provides a high-level interface to the
-TensorFlow API via the \emph{Builder} pattern. It allows the user to wrap
-TensorFlow operations and tensors into ``pretty'' versions and then quickly
-chain any number of layers operating on these tensors. For example, it is
-possible to feed an input tensor into a fully connected (``dense'')
-neural network layer as we did in Subsection \ref{sec:code-walk} with just a
-single line of code. Shown below is an example use of PrettyTensor, where a
-standard TensorFlow placeholder is wrapped into a library-compatible object and
-then fed through three fully connected layers to finally output a softmax
-distribution.
-
-\begin{lstlisting}
-examples = tf.placeholder([None, 784], tf.float32)
-softmax = (prettytensor.wrap(examples)
-              .fully_connected(256, tf.nn.relu)
-              .fully_connected(128, tf.sigmoid)
-              .fully_connected(64, tf.tanh)
-              .softmax(10))
-\end{lstlisting}
-
-\subsubsection{TFLearn}\label{sec:code-abstract-prettytensor}
-
-TFLearn is another abstraction library built on top of TensorFlow that provides
-high-level building blocks to quickly construct TensorFlow graphs. It has a
-highly modular interface and allows for rapid chaining of neural network layers,
-regularization functions, optimizers and other elements. Moreover, while
-PrettyTensor still relied on the standard \texttt{tf.Session} setup to train and
-evaluate a model, TFLearn adds functionality to easily train a model given an
-example batch and corresponding labels. As many TFLearn functions, such as those
-creating entire layers, return vanilla TensorFlow objects, the library is well
-suited to be mixed with existing TensorFlow code. For example, we could replace
-the entire setup for the output layer discussed in Subsection
-\ref{sec:code-walk} with just a single TFLearn method invocation, leaving the
-rest of our code base \emph{untouched}. Furthermore, TFLearn handles everything
-related to visualization with TensorBoard, discussed in Section
-\ref{sec:visual}, automatically. Shown below is how we can reproduce the full 65
-lines of standard TensorFlow code given in Appendix \ref{app:code} with
-\emph{less than 10 lines} using TFLearn.
-
-\lstinputlisting{code/mnist_tflearn.py}
 
 %%% Local Variables:
 %%% mode: latex

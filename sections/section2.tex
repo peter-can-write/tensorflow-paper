@@ -508,144 +508,6 @@ $\beta$. This last and final evolution is given in Figure \ref{fig:cross-c}.
   \label{fig:cross}
 \end{figure}
 
-\subsection{Optimizations}\label{sec:model-optim}
-
-To ensure a maximum of efficiency and performance of the TensorFlow execution
-model, a number of optimizations are built into the library. In this subsection,
-we examine three such improvements: common subgraph elimination, execution
-scheduling and finally lossy compression.
-
-\subsubsection{Common Subgraph Elimination}\label{sec:model-optim-common}
-
-An optimization performed by many modern compilers is \emph{common subexpression
-  elimination}, whereby a compiler may possibly replace the computation of an
-identical value two or more times by a single instance of that computation. The
-result is then stored in a temporary variable and reused where it was previously
-re-calculated. Similarly, in a TensorFlow graph, it may occur that the same
-operation is performed on identical inputs more than once. This can be
-inefficient if the computation happens to be an expensive one. Moreover, it may
-incur a large memory overhead given that the result of that operation must be
-held in memory multiple times. Therefore, TensorFlow also employs a common
-subexpression, or, more aptly put, common \emph{subgraph} elimination pass prior
-to execution. For this, the computational graph is traversed and every time two
-or more operations of the same type (e.g. \texttt{MatMul}) receiving the same
-input tensors are encountered, they are canonicalized to only one such
-subgraph. The output tensor of that single operation is then redirected to all
-dependent nodes. Figure \ref{fig:subgraph-elim} gives an example of common
-subgraph elimination.
-
-\begin{figure}
-  \centering
-  \begin{subfigure}[h]{0.5\textwidth}
-    \centering
-    \begin{tikzpicture}
-      % First operation
-      \draw [very thick] (1, 1.8) circle [radius=0.4cm] node {$z$};
-
-      % Input Nodes
-      \draw [very thick] (0, 0) circle [radius=0.4cm] node {$x$};
-      \draw [very thick] (2, 0) circle [radius=0.4cm] node {$y$};
-
-      % Edges
-      \draw [very thick, -stealth] (0, 0.4) -- ++(60:1.31);
-      \draw [very thick, -stealth] (2, 0.4) -- ++(120:1.3);
-
-      % Operation Label
-      \draw (1, 1.2) node {$+$};
-
-      % Second operation
-      \draw [very thick] (4.5, 1.8) circle [radius=0.4cm] node {$z'$};
-
-      % Input Nodes
-      \draw [very thick] (3.5, 0) circle [radius=0.4cm] node {$x$};
-      \draw [very thick] (5.5, 0) circle [radius=0.4cm] node {$y$};
-
-      % Edges
-      \draw [very thick, -stealth] (3.5, 0.4) -- ++(60:1.29);
-      \draw [very thick, -stealth] (5.5, 0.4) -- ++(120:1.29);
-
-      % Operation Label
-      \draw (4.5, 1.2) node {$+$};
-
-      % Square
-      \draw [very thick] (2.75, 3.1) circle [radius=0.4cm] node {$z^2$};
-
-      % Edges
-      \draw [very thick, -stealth] (1, 2.2) -- ++(30:1.57);
-      \draw [very thick, -stealth] (4.5, 2.2) -- ++(150:1.55);
-
-      % Operation Label
-      \draw (2.75, 2.5) node {$\times$};
-
-      % Spacing fuck you
-      \draw (0, -1);
-    \end{tikzpicture}
-  \end{subfigure}
-  %
-  \begin{subfigure}[h]{0.5\textwidth}
-    \centering
-    \begin{tikzpicture}
-      % First operation
-      \draw [very thick] (1, 1.8) circle [radius=0.4cm] node {$z$};
-
-      % Input Nodes
-      \draw [very thick] (0, 0) circle [radius=0.4cm] node {$x$};
-      \draw [very thick] (2, 0) circle [radius=0.4cm] node {$y$};
-
-      % Edges
-      \draw [very thick, -stealth] (0, 0.4) -- ++(60:1.3);
-      \draw [very thick, -stealth] (2, 0.4) -- ++(120:1.3);
-
-      % Operation Label
-      \draw (1, 1.2) node {$+$};
-
-      % Square
-      \draw [very thick] (1, 3.6) circle [radius=0.4cm] node {$z^2$};
-
-      % Operation Label
-      \draw (1, 3) node {$\times$};
-
-      % Edges
-      \draw [very thick, -stealth] (0.9, 2.2) .. controls +(-0.4, 0.4) .. +(-0.2, 1.1);
-      \draw [very thick, -stealth] (1.1, 2.2) .. controls +(+0.4, 0.4) .. +(+0.2, 1.1);
-    \end{tikzpicture}
-  \end{subfigure}
-  \caption{An example of how common subgraph elimination is used to transform the
-    equations $z = x + y$, $z' = x + y$, $z^2 = z \cdot z'$ to just two
-    equations $z = x + y$ and $z^2 = z \cdot z$. This computation could
-    theoretically be optimized further to a \texttt{square} operation requiring
-    only one input (thus reducing the cost of data movement), though it is not
-    known if TensorFlow employs such secondary canonicalization.}
-  \label{fig:subgraph-elim}
-\end{figure}
-
-\subsubsection{Scheduling}\label{sec:model-optim-schedule}
-
-A simple yet powerful optimization is tuo schedule node execution as late as
-possible. Ensuring that the results of operations remain in memory only for the
-minimum required amount of time reduces peak memory consumption and can thus
-greatly improve the overall performance of the system. The authors of
-\cite{tensorflow} note that this is especially vital on devices such as GPUs,
-where memory resources are scarce. Furthermore, careful scheduling also pertains
-to the activation of \texttt{send} and \texttt{recv} nodes, where not only
-memory but also network resources are contested.
-
-\subsubsection{Lossy Compression}\label{sec:model-optim-lossy}
-
-One of the primary goals of many machine learning algorithms used for
-classification, recognition or other tasks is to build robust models. With
-\emph{robust} we mean that an optimally trained model should ideally not change
-its response if it is first fed a signal and then a noisy variation of that
-signal. As such, these machine learning algorithms typically do not require high
-precision arithmetic as provided by standard IEEE 754 32-bit floating point
-values. Rather, 16 bits of precision in the mantissa would do just as well. For
-this reason, another optimization performed by TensorFlow is the internal
-addition of conversion nodes to the computational graph, which convert such
-high-precision 32-bit floating-point values to truncated 16-bit representations
-when communicating across devices and across machines. On the receiving end, the
-truncated representation is converted back to 32 bits simply by filling in
-zeros, rather than rounding \cite{tensorflow}.
-
 \subsection{Additions to the Basic Programming Model}\label{sec:model-ext}
 
 Having discussed the basic computational paradigms and execution model of
@@ -790,7 +652,7 @@ considerable performance cost and especially result in increased memory
 overhead. To see why, it is important to understand that there exist two
 equivalent formulations of the chain rule. The first reuses previous
 computations and therefore requires them to be stored longer than strictly
-necessary for forward-propagation. For arbitary functions $f$, $g$ and $h$ it is
+necessary for forward-propagation. For arbitrary functions $f$, $g$ and $h$ it is
 given in Equation \ref{eq:chain-reuse}:
 \begin{equation}\label{eq:chain-reuse}
   \frac{\mathrm{d} f}{\mathrm{d} w} = f'(y) \cdot g'(x) \cdot h'(w) \text{ with } y = g(x), x =
@@ -839,19 +701,6 @@ to know the number of iterations performed, but also requires access to each
 intermediary value produced. This technique of stepping through a loop in
 reverse to compute the gradients is referred to as \emph{back-propagation
   through time} in \cite{theano}.
-
-\subsubsection{Checkpoints}\label{sec:model-ext-check}
-
-Another extension to TensorFlow's basic programming model is the notion of
-\emph{checkpoints}, which allow for persistent storage and recovery of
-variables. It is possible to add \texttt{Save} nodes to the computational graph
-and connect them to variables whose tensors you wish to serialize. Furthermore,
-a variable may be connected to a \texttt{Restore} operation, which deserializes
-a stored tensor at a later point. This is especially useful when training a
-model over a long period of time to keep track of the model's performance while
-reducing the risk of losing any progress made. Also, checkpoints are a vital
-element to ensuring fault tolerance in a distributed environment
-\cite{tensorflow}.
 
 %%% Local Variables:
 %%% mode: latex
