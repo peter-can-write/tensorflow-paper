@@ -1,27 +1,25 @@
 \section{The TensorFlow Programming Model}\label{sec:model}
 
 In this section we provide an in-depth discussion of the abstract computational
-principles underlying the TensorFlow software library. We begin with a thorough
+principles underlying the TensorFlow software library. We begin with an
 examination of the basic structural and architectural decisions made by the
-TensorFlow development team. Subsequently, we study TensorFlow's execution model
-and provide insight into the way TensorFlow graphs are assigned to available
-hardware units in a local as well as distributed environment. Lastly, we
-investigate how TensorFlow implements back-propagation, a crucial step for many
-machine learning algorithms.
+TensorFlow development team. Thereafter, we study TensorFlow's local as well as
+distributed execution model. Lastly, we investigate how TensorFlow implements
+back-propagation, a crucial step for many machine learning algorithms.
 
 \subsection{Computational Graph Architecture}\label{sec:model-graphs}
 
 In TensorFlow, machine learning algorithms are represented as
 \emph{computational graphs}. A computational or \emph{dataflow} graph is a form
 of directed graph where \emph{vertices} or \emph{nodes} describe operations,
-while \emph{edges} or \emph{arcs} represent data flowing between these
-operations. If an output variable $z$ is the result of applying a binary
-operation to two inputs $x$ and $y$, then we draw directed edges from $x$ and
-$y$ to an output node representing $z$ and annotate the vertex with a label
-describing the performed computation. Examples for computational graphs are
-given in Figure \ref{fig:graphs}. The following paragraphs discuss the principle
-elements of such a dataflow graph, namely \emph{operations}, \emph{tensors},
-\emph{variables} and \emph{sessions} in further detail.
+while \emph{edges} represent data flowing between these operations. If an output
+variable $z$ is the result of applying a binary operation to two inputs $x$ and
+$y$, then we draw directed edges from $x$ and $y$ to an output node representing
+$z$ and annotate the vertex with a label describing the performed
+computation. Examples for computational graphs are given in Figure
+\ref{fig:graphs}. The following paragraphs discuss the principle elements of
+such a dataflow graph, namely \emph{operations}, \emph{tensors},
+\emph{variables} and \emph{sessions}.
 
 \begin{figure}
   \begin{tikzpicture}
@@ -143,28 +141,17 @@ multi-dimensional collection of homogeneous values with a fixed, static type. In
 terms of the computational graph, a tensor can be seen as a \emph{symbolic
   handle} to one of the outputs of an operation. A tensor itself does not hold
 or store values in memory, but provides only an interface for retrieving the
-value referenced by the tensor. When creating an operation in the TensorFlow
-programming environment, such as for the expression $x + y$, a tensor object is
-returned. This tensor may then be supplied as input to other computations,
-thereby connecting the source and destination operations with an edge. By these
-means, data flows through a TensorFlow graph.
+value referenced by the tensor.
 
 \subsubsection{Variables}\label{sec:model-graphs-vars}
 
-In a typical situation, such as when performing stochastic gradient descent
-(SGD), the graph of a machine learning model is executed from start to end
-multiple times for a single experiment. Between two such invocations, the
-majority of tensors in the graph are destroyed and do not persist. However, it
-is often necessary to maintain state across evaluations of the graph, such as
-for the weights and parameters of a neural network. For this purpose, there
-exist \emph{variables} in TensorFlow, which are simply special operations that
-can be added to the computational graph.
-
-In detail, variables can be described as persistent, mutable handles to
-in-memory buffers storing tensors. As such, variables are characterized by a
-certain shape and a fixed type. To manipulate and update variables manually (as
-opposed to implicitly by certain library routines), TensorFlow provides the
-\texttt{assign} family of graph operations.
+Between two invocations of a computational graph, the majority of tensors in the
+graph are destroyed and do not persist. However, it is often necessary to
+maintain state across evaluations of a graph, such as for the weights and
+parameters of a neural network. For this purpose, there exist \emph{variables}
+in TensorFlow, which can be described as persistent, mutable handles to
+in-memory buffers storing tensors. To manipulate and update variables,
+TensorFlow provides the \texttt{assign} family of graph operations.
 
 \subsubsection{Sessions}\label{sec:model-graphs-sessions}
 
