@@ -378,7 +378,7 @@ is placed and connected to $\nu$. In tandem, on device $B$, two \texttt{recv}
 nodes are instantiated and attached to $\alpha$ and $\beta$, respectively. The
 \texttt{send} and \texttt{recv} nodes are then connected by two additional
 edges. This step is shown in Figure \ref{fig:cross-b}. During execution of the
-graph, cross-device communication of data occurrs exclusively via these special
+graph, cross-device communication of data occurs exclusively via these special
 nodes. When the devices are located on separate machines, transmission between
 the worker processes on these machines may involve remote communication
 protocols such as TCP or RDMA.
@@ -621,7 +621,7 @@ subgraph elimination.
 
 \subsubsection{Scheduling}\label{sec:model-optim-schedule}
 
-A simple yet powerful optimization is tuo schedule node execution as late as
+A simple yet powerful optimization is to schedule node execution as late as
 possible. Ensuring that the results of operations remain in memory only for the
 minimum required amount of time reduces peak memory consumption and can thus
 greatly improve the overall performance of the system. The authors of
@@ -790,7 +790,7 @@ considerable performance cost and especially result in increased memory
 overhead. To see why, it is important to understand that there exist two
 equivalent formulations of the chain rule. The first reuses previous
 computations and therefore requires them to be stored longer than strictly
-necessary for forward-propagation. For arbitary functions $f$, $g$ and $h$ it is
+necessary for forward-propagation. For arbitrary functions $f$, $g$ and $h$ it is
 given in Equation \ref{eq:chain-reuse}:
 \begin{equation}\label{eq:chain-reuse}
   \frac{\mathrm{d} f}{\mathrm{d} w} = f'(y) \cdot g'(x) \cdot h'(w) \text{ with } y = g(x), x =
