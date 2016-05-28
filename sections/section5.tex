@@ -14,34 +14,6 @@ The following three paragraphs compare Theano, Torch and Caffe to TensorFlow,
 respectively. Table \ref{tab:comp} provides an overview of the most important
 talking points.
 
-\begin{table}
-  \begin{tabular}{llllc}
-    \textbf{Library} & \textbf{Frontends} &
-    \textbf{Style} &
-    \textbf{Gradients} &
-    \specialcell{\textbf{Distributed}\\\textbf{Execution}}
-    \\ \toprule
-    TensorFlow & Python, C++\textsuperscript{\dag} &
-    Declarative & Symbolic & $\checkmark$\textsuperscript{\ddag}
-    \\
-    Theano & Python & Declarative & Symbolic & $\times$
-    \\
-    Torch & LuaJIT & Imperative & Explicit & $\times$
-    \\
-    Caffe & Protobuf & Imperative & Explicit & $\times$
-    \\ \bottomrule
-  \end{tabular}
-  \begin{tabular}{l}
-    \textsuperscript{\dag} Very limited API.
-    \\
-    \textsuperscript{\ddag} Starting with TensorFlow 0.8, released in April 2016
-    \cite{tensorflowdist}.
-  \end{tabular}
-  \caption{A table comparing TensorFlow to Theano, Torch and Caffe in several
-    categories.}
-  \label{tab:comp}
-\end{table}
-
 \subsubsection{Theano}\label{sec:comp-quality-theano}
 
 Of the three candidate alternatives we discuss, Theano, which has a Python
@@ -92,6 +64,34 @@ other state-of-the-art categories supported well by TensorFlow. For example,
 Caffe, by design, does not support cyclic architectures, which form the basis of
 RNN, LSTM and other models. Caffe has no support for distributed
 execution\footnote{\url{https://github.com/BVLC/caffe/issues/876}}.
+
+\begin{table}[h!]
+  \begin{tabular}{llllc}
+    \textbf{Library} & \textbf{Frontends} &
+    \textbf{Style} &
+    \textbf{Gradients} &
+    \specialcell{\textbf{Distributed}\\\textbf{Execution}}
+    \\ \toprule
+    TensorFlow & Python, C++\textsuperscript{\dag} &
+    Declarative & Symbolic & $\checkmark$\textsuperscript{\ddag}
+    \\
+    Theano & Python & Declarative & Symbolic & $\times$
+    \\
+    Torch & LuaJIT & Imperative & Explicit & $\times$
+    \\
+    Caffe & Protobuf & Imperative & Explicit & $\times$
+    \\ \bottomrule
+  \end{tabular}
+  \begin{tabular}{l}
+    \textsuperscript{\dag} Very limited API.
+    \\
+    \textsuperscript{\ddag} Starting with TensorFlow 0.8, released in April 2016
+    \cite{tensorflowdist}.
+  \end{tabular}
+  \caption{A table comparing TensorFlow to Theano, Torch and Caffe in several
+    categories.}
+  \label{tab:comp}
+\end{table}
 
 \subsection{Quantitative Comparison}\label{sec:comp-quantity}
 
