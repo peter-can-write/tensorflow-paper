@@ -180,9 +180,8 @@ can be added to the computational graph.
 
 In detail, variables can be described as persistent, mutable handles to
 in-memory buffers storing tensors. As such, variables are characterized by a
-certain shape and a fixed type. To manipulate and update variables manually (as
-opposed to implicitly by certain library routines), TensorFlow provides the
-\texttt{assign} family of graph operations.
+certain shape and a fixed type. To manipulate and update variables, TensorFlow
+provides the \texttt{assign} family of graph operations.
 
 When creating a variable node for a TensorFlow graph, it is necessary to supply
 a tensor with which the variable is initialized upon graph execution. The shape
