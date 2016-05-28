@@ -163,7 +163,7 @@ TensorFlow, which in turn executes the \texttt{initializer} operation for each
 \texttt{Variable} in the graph. Then, we can perform a certain number of
 iterations of stochastic gradient descent, fetching an example and label
 mini-batch from the MNIST dataset each time and feeding it to the \texttt{run}
-function of our optimizer. At the end, our loss will (hopefully) be small:
+routine. At the end, our loss will (hopefully) be small:
 
 \begin{lstlisting}
 with tf.Session(graph=graph) as session:
