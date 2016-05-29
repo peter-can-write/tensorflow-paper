@@ -164,17 +164,11 @@ entry point for executing parts or the entirety of a computational graph. This
 method takes as input the nodes in the graph whose tensors should be computed
 and returned. Moreover, an optional mapping from arbitrary nodes in the graph to
 respective replacement values --- referred to as \emph{feed nodes} --- may be
-supplied to \texttt{run} as well \cite{tensorflow}.
-
-Upon invocation of \texttt{run}, TensorFlow will start at the requested output
-nodes and work backwards, examining the graph dependencies and computing the
-full transitive closure of all nodes that must be executed. These nodes are then
-assigned to one or many physical execution units (CPUs, GPUs etc.) on one or
-many machines. The rules by which this assignment takes place are determined by
-TensorFlow's \emph{placement algorithm}, discussed in detail in Subsection
-\ref{subsec:model-exec}. Furthermore, as there exists the possibility to specify
-explicit orderings of node evaluations, called \emph{control dependencies}, the
-execution algorithm will ensure that these dependencies are maintained.
+supplied to \texttt{run} as well \cite{tensorflow}. Upon invocation of
+\texttt{run}, TensorFlow will start at the requested output nodes and work
+backwards, examining the graph dependencies and computing the full transitive
+closure of all nodes that must be executed. These nodes are then assigned to one
+or many physical execution units (CPUs, GPUs etc.) on one or many machines.
 
 \subsection{Execution Model}\label{sec:model-exec}
 
@@ -244,9 +238,9 @@ eventually be mapped to an available device to be executed. In practice, a
 device will most often be either a CPU or a GPU. However, TensorFlow supports
 registration of further kinds of physical execution units by the user. For
 example, in May 2016, Google announced its \emph{Tensor Processing Unit} (TPU),
-a custom built ASIC (application-specific-integrated-circuit) optimized
-specifically for fast tensor computations \cite{tpu}. It is thus understandably
-easy to integrate new device classes as novel hardware emerges.
+a custom built ASIC optimized specifically for fast tensor computations
+\cite{tpu}. It is thus understandably easy to integrate new device classes as
+novel hardware emerges.
 
 \subsubsection{Placement Algorithm}\label{sec:model-exec-placement}
 
@@ -293,10 +287,7 @@ placed and connected to $\nu$. In tandem, on device $B$, a \texttt{recv} node is
 instantiated and attached to $\alpha$ and $\beta$. The \texttt{send} and
 \texttt{recv} nodes are then connected by an additional edge. This is shown in
 Figure \ref{fig:cross-b}. During execution of the graph, cross-device
-communication of data occurs exclusively via these special nodes. When the
-devices are located on separate machines, transmission between the worker
-processes on these machines may involve remote communication protocols such as
-TCP or RDMA.
+communication of data occurs exclusively via these special nodes.
 
 \begin{figure}
   \centering
@@ -375,23 +366,24 @@ TCP or RDMA.
 
 In a large number of deep learning and other machine learning algorithms, it is
 necessary to compute the gradients of particular nodes of the computational
-graph with respect to one or many other nodes. In \cite{goodfellow2016}, two
-approaches for back-propagating gradients through a computational graph are
-described. The first, which the authors refer to as \emph{symbol-to-number
-  differentiation}, receives a set of input values and then computes the
-\emph{numerical values} of the gradients at those input values. It does so by
-explicitly traversing the graph first in the forward order (forward-propagation)
-to compute the cost, then in reverse order (back-propagation) to compute the
-gradients via the chain rule. Another approach, more relevant to TensorFlow, is
-what \cite{goodfellow2016} calls \emph{symbol-to-symbol derivatives} and
-\cite{tensorflow} terms \emph{automatic gradient computation}. In this case,
-gradients are not computed by an explicit implementation of the back-propagation
-algorithm. Rather, special nodes are added to the computational graph that
-calculate the gradient of each operation and thus ultimately the chain rule. To
-perform back-propagation, these nodes must then simply be executed like any
-other nodes by the graph evaluation engine. As such, this approach does not
-produce the desired derivatives as a numeric value, but only as a \emph{symbolic
-  handle} to compute those values.
+graph with respect to one or many other nodes. This is most often done via the
+\emph{back-propagation} algorithm, which implements the chain rule. In
+\cite{goodfellow2016}, two approaches for back-propagating gradients through a
+computational graph are described. The first, which the authors refer to as
+\emph{symbol-to-number differentiation}, receives a set of input values and then
+computes the \emph{numerical values} of the gradients at those input values. It
+does so by explicitly traversing the graph first in the forward order
+(forward-propagation) to compute the cost, then in reverse order
+(back-propagation) to compute the gradients. Another approach, more relevant to
+TensorFlow, is what \cite{goodfellow2016} calls \emph{symbol-to-symbol
+  derivatives} and \cite{tensorflow} terms \emph{automatic gradient
+  computation}. In this case, gradients are not computed by an explicit
+implementation of the back-propagation algorithm. Rather, special nodes are
+added to the computational graph that calculate the gradient of each operation
+and thus ultimately the chain rule. To perform back-propagation, these nodes
+must then simply be executed like any other nodes by the graph evaluation
+engine. As such, this approach does not produce the desired derivatives as a
+numeric value, but only as a \emph{symbolic handle} to compute those values.
 
 When TensorFlow needs to compute the gradient of a particular node $\nu$ with
 respect to some other tensor $\alpha$, it traverses the graph in reverse order
@@ -399,12 +391,12 @@ from $\nu$ to $\alpha$. Each operation $o$ encountered during this traversal
 represents a function depending on $\alpha$ and is one of the ``links'' in the
 chain $(\nu \,\circ\, \dots\, \circ\, o \,\circ\, \dots)(\alpha)$ producing the
 output tensor of the graph. Therefore, TensorFlow adds a \emph{gradient node}
-for each such operation $o$ that takes the gradient of the previous link (the
-outer function) and multiplies it with its own gradient. At the end of the
-traversal, there will be a node providing a symbolic handle to the overall
-target derivative $\frac{d\nu}{d\alpha}$, which \emph{implicitly} implements the
-back-propagation algorithm. Figure \ref{fig:gradients} shows how a computational
-graph may look before and after gradient nodes are added.
+for each such operation $o$ that takes the gradient of the previous ``link'' and
+multiplies it with its own gradient. At the end of the traversal, there will be
+a node providing a symbolic handle to the overall target derivative
+$\frac{d\nu}{d\alpha}$, which \emph{implicitly} implements the back-propagation
+algorithm. Figure \ref{fig:gradients} shows how a computational graph may look
+before and after gradient nodes are added.
 
 \begin{figure}
   \centering
