@@ -4,10 +4,8 @@ Having conveyed the abstract concepts of TensorFlow's computational model in
 Section \ref{sec:model}, we will now concretize those ideas and speak to
 TensorFlow's programming interface. In the following paragraphs we give a
 step-by-step walkthrough of a practical, real-world example of TensorFlow's
-Python API.
-
-We will train a simple multi-layer perceptron (MLP) with one input and one
-output layer to classify handwritten digits in the
+Python API. We will train a simple multi-layer perceptron (MLP) with one input
+and one output layer to classify handwritten digits in the
 MNIST\footnote{http://yann.lecun.com/exdb/mnist/} dataset. In this dataset, the
 examples are small images of $28 \times 28$ pixels depicting handwritten digits
 in $\in \{0, \dots, 9\}$. We receive each such example as a flattened vector of
@@ -52,7 +50,7 @@ pixels. The label placeholder should expect 10 columns, corresponding to the
 10-dimensional one-hot-encoded vector for each label digit:
 %
 \begin{lstlisting}
-# Using a 32-bit floating-point data type tf.float32
+# Using 32-bit floating-point data type tf.float32
 examples = tf.placeholder(tf.float32, [None, 784])
 labels = tf.placeholder(tf.float32, [None, 10])
 \end{lstlisting}
@@ -64,8 +62,8 @@ $\mathbf{X} \cdot \mathbf{W} + \mathbf{b}$, where $\mathbf{W}$ is a
 \emph{bias} vector $\in \mathbb{R}^{10}$. This yields a new matrix
 $\mathbf{Y} \in \mathbb{R}^{n \times 10}$, containing the \emph{scores} or
 \emph{logits} of our model for each example and each possible digit. To
-transform the logits into a valid probability distribution, we then pass them
-through the softmax function:
+transform the logits into a valid probability distribution, we apply the
+\emph{softmax} function:
 %
 \begin{lstlisting}
 # Draw random weights for symmetry breaking
@@ -79,7 +77,7 @@ logits = tf.matmul(examples, weights) + bias
 estimates = tf.nn.softmax(logits)
 \end{lstlisting}
 %
-Next, we compute our objective function, producing the error or \emph{loss} of
+We then compute our objective function, producing the error or \emph{loss} of
 the model given its current trainable parameters $\mathbf{W}$ and
 $\mathbf{b}$. We do this by calculating the \emph{cross entropy}
 $H(\mathbf{L}, \mathbf{Y})_i = -\sum_j \mathbf{L}_{i,j} \cdot
@@ -113,12 +111,11 @@ object to its constructor, so that it knows which graph to manage. To then
 execute nodes, we use \texttt{Session.run()} and pass a list of tensors we wish
 to compute. Before evaluating any other node, we must first initialize the
 variables in our graph. We do this by \texttt{run}ning the
-\texttt{tf.initialize\_all\_variables()} utility operation. Then, we can perform
-a certain number of iterations of stochastic gradient descent, fetching an
-example and label mini-batch from the MNIST dataset each time and feeding it to
-the \texttt{run} routine. For this, we assume a utility object \texttt{mnist}
-which can be used as shown below. At the end, our loss will (hopefully) be
-small:
+\texttt{tf.initialize\_all\_variables()} utility operation. Then, we perform a
+certain number of iterations of stochastic gradient descent, fetching an example
+and label mini-batch from the MNIST dataset each time and feeding it to the
+\texttt{run} routine. For this, we assume a utility object \texttt{mnist} which
+can be used as shown below. At the end, our loss will (hopefully) be small:
 %
 \begin{lstlisting}
 with tf.Session(graph=graph) as session:
