@@ -1,0 +1,64 @@
+% Presentation on Video -- Braga 2015
+
+\documentclass{beamer}
+\usetheme{default}
+\setbeamertemplate{sections/subsections in toc}[sections numbered]
+\setbeamertemplate{items}[default]
+
+\usepackage[american]{babel}
+\usepackage{amsmath}
+\usepackage[libertine]{newtxmath}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{colortbl}
+
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+
+\definecolor{custommagenta}{RGB}{230,70,165}
+\definecolor{customgreen}{RGB}{30,210,100}
+\definecolor{customgray}{gray}{0.5}
+
+\lstset{
+% Format settings
+language=Java,
+tabsize=4,
+breakatwhitespace=true,
+breaklines=true,
+%frame=leftline,
+captionpos=b,
+keepspaces=true,
+showstringspaces=false,
+%numbers=left,
+%numberstyle=\scriptsize,
+% Style settings
+basicstyle=\ttfamily\scriptsize,
+keywordstyle=\color{custommagenta}\ttfamily,
+stringstyle=\color{customgreen}\ttfamily,
+commentstyle=\color{customgray}\ttfamily,
+morecomment=[l][\color{red}]{\#}
+}
+
+\addtolength{\parskip}{\baselineskip}
+
+\newenvironment{slide}[1]
+{
+	\section{#1}
+	\begin{frame}
+		\frametitle{#1}
+}
+{
+	\end{frame}
+}
+
+\newcommand{\sitem}{\vspace{2mm}\item}
+
+\newcommand{\cat}[2]
+{
+\begin{flushright}
+	\includegraphics[scale=#2]{img/cat#1}
+\end{flushright}
+}
+
+\DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
+\DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
