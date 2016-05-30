@@ -26,7 +26,9 @@ with graph.as_default():
     # Placeholder for labels
     labels = tf.placeholder(shape=[None, 10], dtype=tf.float32)
 
-    weights = tf.Variable(tf.truncated_normal(shape=[784, 10], stddev=0.1))
+    # Draw the weights from a random uniform distribution for symmetry breaking
+    weights = tf.Variable(tf.random_uniform(shape=[784, 10]))
+    # Slightly positive biases to avoid dead neurons
     bias = tf.Variable(tf.constant(0.1, shape=[10]))
 
     # Apply an affine transformation to the input features
@@ -40,7 +42,7 @@ with graph.as_default():
     loss = tf.reduce_mean(cross_entropy)
 
     # Create a gradient-descent optimizer that minimizes the loss.
-    # We choose a learning rate of 0.01
+    # We choose a learning rate of 0.5
     optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(loss)
 
     # Find the indices where the predictions were correct
@@ -51,7 +53,7 @@ with graph.as_default():
 
 with tf.Session(graph=graph) as session:
     tf.initialize_all_variables().run()
-    for step in range(1001):
+    for step in range(1000):
         example_batch, label_batch = mnist.train.next_batch(100)
         feed_dict = {examples: example_batch, labels: label_batch}
         if step % 100 == 0:

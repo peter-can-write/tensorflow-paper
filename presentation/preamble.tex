@@ -48,6 +48,24 @@
 % 	New Commands
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newcommand{\inlineitem}[2]{{\color{orange}#1.} #2 \hspace{0.5cm}}
+
+\newcommand{\textframe}[1]{%
+  \begin{frame}
+    \centering
+    \Huge
+    \color{orange}
+    \vspace{1cm}
+    #1
+  \end{frame}
+}
+
+\newcommand\invisiblesection[1]{%
+  \refstepcounter{section}%
+  \addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}%
+  \sectionmark{#1}
+}
+
 \DeclareSymbolFont{extraup}{U}{zavm}{m}{n}
 \DeclareMathSymbol{\varheart}{\mathalpha}{extraup}{86}
 

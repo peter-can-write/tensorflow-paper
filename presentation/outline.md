@@ -8,12 +8,12 @@
    - Explain Operation Types
    - Variables
    - Explain Tensors in terms of symbolic handle and in terms of edges
-   - Nothing about Sessions
+   - Explain Sessions, especially `run` and how graphs are executed
 4. Execution Model (2 min)
    - Why is Execution + Hardware so important (it really is!)
    - Client, Master, Workers, Devices
    - Two Degrees of Scalability (many-device vs many-machine)
-   - Placement Algorithm
+   - Placement Algorithm (why TensorFlow supports these two degrees so well)
 5. Backpropagation (2 min)
 6. Visualization with TensorBoard (2 min)
    - Why necessary
