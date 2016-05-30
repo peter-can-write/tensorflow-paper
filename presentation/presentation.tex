@@ -4,17 +4,51 @@
 
 \begin{document}
 
-\begin{frame}
-    \title{A Tour of TensorFlow}
-    \author{Peter Goldsborough}
-    \date\today
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 	Title
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Hack the world
+\begin{frame}[plain, noframenumbering]
+    \title{
+      \vspace{1.2cm}\\
+      A Tour of TensorFlow\\
+      \vspace{1cm}
+      \includegraphics[scale=0.1]{tensorflow}}
+    \author{
+      Peter Goldsborough \\
+      \vspace{0.5cm}
+      \today
+    }
     \titlepage
 \end{frame}
 
-% TOC slide
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 	Table Of Contents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{slide}{Contents}
+\begin{frame}[plain, noframenumbering]
+    \frametitle{Contents}
     \tableofcontents
-\end{slide}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 	Slides
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setcounter{page}{1}
+
+\input{slides/model.tex}
+\input{slides/exec.tex}
+\input{slides/backprop.tex}
+\input{slides/visual.tex}
+\input{slides/uses.tex}
+\input{slides/walk.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 	Outro
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{slides/outro.tex}
 
 \end{document}

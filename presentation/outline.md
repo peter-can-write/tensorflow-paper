@@ -6,6 +6,7 @@
    - Explain computational graphs in one slide
    - Draw a TensorFlow comp. graph
    - Explain Operation Types
+   - Variables
    - Explain Tensors in terms of symbolic handle and in terms of edges
    - Nothing about Sessions
 4. Execution Model (2 min)
