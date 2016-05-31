@@ -174,3 +174,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+mnist_logs/
+mnist_data/

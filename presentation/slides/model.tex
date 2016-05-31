@@ -2,7 +2,7 @@
 \begin{slide}{Computational Paradigms}
  \begin{columns}
   \begin{column}{0.5\textwidth}
-  \only<2, 6>{
+  \only<2>{
   \begin{figure}
   \begin{tikzpicture}
     % x^T w
@@ -167,6 +167,54 @@
 
     % Figure Label
     \draw (2, -1.2) node {$\hat{y} = \tanh(\mathbf{x}^\top \mathbf{w} + b)$};
+  \end{tikzpicture}
+  \end{figure}
+  }
+  \only<6>{
+  \begin{figure}
+  \begin{tikzpicture}
+    % Box
+    \draw [red, very thick] (-1, -0.8) rectangle +(5.5, 5.1);
+
+    % Spacing
+    \draw (0, -2.75);
+
+    % x^T w
+    \draw [very thick] (1, 2) circle [radius=0.5cm] node {\texttt{dot}};
+
+    % x and weights
+    \draw [very thick] (0, 0) circle [radius=0.5cm] node {$\mathbf{x}$};
+    \draw [very thick] (2, 0) circle [radius=0.5cm] node {$\mathbf{w}$};
+
+    % Edges
+    \draw [very thick, -stealth] (0, 0.5) -- ++(60:1.29)
+          node [sloped, above, midway] {\scriptsize $n \times 1$};
+    \draw [very thick, -stealth] (2, 0.5) -- ++(120:1.29)
+          node [sloped, above, midway] {\scriptsize $n \times 1$};
+
+    % Bias
+    \draw [very thick] (3.5, 0) circle [radius=0.5cm] node {$b$};
+
+    % z = (x^T w) + b
+    \draw [very thick] (3.5, 2) circle [radius=0.5cm] node {$+$};
+
+
+    % Edges
+    \draw [very thick, -stealth] (3.5, 0.52) -- (3.5, 1.48)
+          node [sloped, midway, above] {\scriptsize $1 \times 1$};
+    \draw [very thick, -stealth] (1.52, 2) -- (2.98, 2)
+          node [sloped, midway, above] {\scriptsize $1 \times 1$};
+
+    % Sigmoid
+    \draw [very thick] (2.2, 3.5) circle [radius=0.5] node {$\tanh$};
+
+    % Edge
+    \draw [very thick, -stealth] (3.5, 2.52) -- ++(140:1.1cm)
+          node [sloped, midway, above] {\scriptsize $1 \times 1$};
+
+
+    % Figure Label
+    \draw (2, -1.3) node {$\hat{y} = \mathtt{session.run}(\tanh(\mathbf{x}^\top \mathbf{w} + b))$};
   \end{tikzpicture}
   \end{figure}
   }
