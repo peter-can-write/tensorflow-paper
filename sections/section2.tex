@@ -106,23 +106,6 @@ control flow directive, a file I/O operation or even a network communication
 port. Table \ref{tab:ops} gives an overview of different kinds of operations
 that may be declared in a TensorFlow graph.
 
-\begin{table}[b!]
-  \begin{tabular}{ll}
-    \textbf{Category} & \textbf{Examples}
-    \\ \toprule
-    Element-wise operations & \texttt{Add}, \texttt{Mul}, \texttt{Exp}
-    \\
-    Matrix operations & \texttt{MatMul}, \texttt{MatrixInverse}
-    \\
-    Value-producing operations & \texttt{Constant}, \texttt{Variable}
-    \\
-    Neural network units & \texttt{SoftMax}, \texttt{ReLU}, \texttt{Conv2D}
-    \\ \bottomrule
-    \end{tabular}
-    \caption{Examples for TensorFlow operations \cite{tensorflow}.}
-    \label{tab:ops}
-\end{table}
-
 Any operation must be backed by an associated implementation. In
 \cite{tensorflow} such an implementation is referred to as the operation's
 \emph{kernel}. A particular kernel is always specifically built for execution on
@@ -148,10 +131,27 @@ in TensorFlow, which can be described as persistent, mutable handles to
 in-memory buffers storing tensors. To manipulate and update variables,
 TensorFlow provides the \texttt{assign} family of graph operations.
 
+\begin{table}[t!]
+  \begin{tabular}{ll}
+    \textbf{Category} & \textbf{Examples}
+    \\ \toprule
+    Element-wise operations & \texttt{Add}, \texttt{Mul}, \texttt{Exp}
+    \\
+    Matrix operations & \texttt{MatMul}, \texttt{MatrixInverse}
+    \\
+    Value-producing operations & \texttt{Constant}, \texttt{Variable}
+    \\
+    Neural network units & \texttt{SoftMax}, \texttt{ReLU}, \texttt{Conv2D}
+    \\ \bottomrule
+    \end{tabular}
+    \caption{Examples for TensorFlow operations \cite{tensorflow}.}
+    \label{tab:ops}
+\end{table}
+
 \subsubsection{Sessions}\label{sec:model-graphs-sessions}
 
 In TensorFlow, the execution of operations and evaluation of tensors may only be
-performed in a special environment referred to as \emph{session}. One of the
+performed in a special environment referred to as a \emph{session}. One of the
 responsibilities of a session is to encapsulate the allocation and management of
 resources such as variable buffers. Moreover, the \texttt{Session} interface of
 the TensorFlow library provides a \texttt{run} routine, which is the primary
@@ -168,7 +168,7 @@ or many physical execution units (CPUs, GPUs etc.) on one or many machines.
 \subsection{Execution Model}\label{sec:model-exec}
 
 To execute computational graphs composed of the various elements just discussed,
-TensorFlow divides the tasks for its implementation among four distinct groups:
+TensorFlow divides the tasks of its implementation among four distinct groups:
 the \emph{client}, the \emph{master}, a set of \emph{workers} and lastly a
 number of \emph{devices}. When the client requests evaluation of a TensorFlow
 graph via a \texttt{Session}'s \texttt{run} routine, this query is sent to the
@@ -180,9 +180,9 @@ which the kernels of an operation are implemented.
 Within this model, there are two degrees of scalability. The first degree
 pertains to scaling the number of machines on which a graph is executed. The
 second degree refers to the fact that on each machine, there may then be more
-than one device, such as, for example, five independent GPUs and/or three
-CPUs. For this reason, there exist two ``versions'' of TensorFlow, one for local
-execution on a single machine (but possibly many devices), and one supporting a
+than one device, such as, for example, two GPUs and/or three CPUs. For this
+reason, there exist two ``versions'' of TensorFlow, one for local execution on a
+single machine (but possibly many devices), and one supporting a
 \emph{distributed} implementation across many machines and many devices.
 
 \subsubsection{Devices}\label{sec:model-exec-devices}
@@ -200,9 +200,9 @@ novel hardware emerges.
 \subsubsection{Placement Algorithm}\label{sec:model-exec-placement}
 
 To determine what nodes to assign to which device, TensorFlow makes use of a
-\emph{placement algorithm}. The placement algorithm simulates the execution of
-the computational graph and traverses its nodes from input tensors to output
-tensors. To decide on which of the available devices
+\emph{placement algorithm} \cite{tensorflow}. The placement algorithm simulates
+the execution of the computational graph and traverses its nodes from input
+tensors to output tensors. To decide on which of the available devices
 $\mathbb{D} = \{d_1, \dots, d_n\}$ to place a given node $\nu$ encountered
 during this traversal, the algorithm consults a \emph{cost model}
 $C_\nu(d)$. This cost model takes into account four pieces of information to
@@ -217,8 +217,8 @@ which to place the node during execution:
   \item The expected execution time for the kernel on the device.
   \item A heuristic for the cost of cross-device (and possibly cross-machine)
     transmission of the input tensors to the operation, in the case that the
-    input tensors have been placed on nodes different from the one currently
-    under consideration.
+    input tensors were placed on nodes different from the one currently under
+    consideration.
 \end{enumerate}
 
 \subsubsection{Cross-Device Execution}\label{sec:model-exec-single}
@@ -337,7 +337,7 @@ added to the computational graph that calculate the gradient of each operation
 and thus ultimately the chain rule. To perform back-propagation, these nodes
 must then simply be executed like any other nodes by the graph evaluation
 engine. As such, this approach does not produce the desired derivative as a
-numeric value, but only as a \emph{symbolic handle} to compute that value.
+numerical value, but only as a \emph{symbolic handle} to calculate that value.
 
 When TensorFlow needs to compute the gradient of a particular node $\nu$ with
 respect to some other tensor $\alpha$, it traverses the graph in reverse order

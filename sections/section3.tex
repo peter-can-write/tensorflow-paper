@@ -2,7 +2,7 @@
 
 Having conveyed the abstract concepts of TensorFlow's computational model in
 Section \ref{sec:model}, we will now concretize those ideas and speak to
-TensorFlow's programming interface. In the following paragraphs we give a
+TensorFlow's programming interface. In the following paragraphs, we give a
 step-by-step walkthrough of a practical, real-world example of TensorFlow's
 Python API. We will train a simple multi-layer perceptron (MLP) with one input
 and one output layer to classify handwritten digits in the
@@ -31,7 +31,7 @@ manager in a \texttt{with-as} statement:
 # Create a new graph
 graph = tf.Graph()
 
-# Register the graph as the default one to add nodes
+# Register the graph as the default
 with graph.as_default():
   # Add operations ...
 \end{lstlisting}
@@ -133,7 +133,7 @@ with tf.Session(graph=graph) as session:
 \end{lstlisting}
 %
 The full code listing for this example, along with some additional
-implementation to compute an accuracy metric at each time step is given in
+implementation to compute an accuracy metric at each time step, is given in
 Appendix \ref{app:code}.
 
 %%% Local Variables:
