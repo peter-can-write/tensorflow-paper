@@ -84,14 +84,11 @@ such a dataflow graph, namely \emph{operations}, \emph{tensors},
     % Figure Label
     \draw (2, -1) node {$\hat{y} = \sigma(\mathbf{x}^\top \mathbf{w} + b)$};
   \end{tikzpicture}
-  \caption{Examples of computational graphs. The left graph displays a very
-    simple computation, consisting of just an addition of the two input
-    variables $x$ and $y$. In this case, $z$ is the result of the operation $+$,
-    as the annotation suggests. The right graph gives a more complex example of
-    computing a logistic regression variable $\hat{y}$ in for some example
-    vector $\mathbf{x}$, weight vector $\mathbf{w}$ as well as a scalar bias
-    $b$. As shown in the graph, $\hat{y}$ is the result of the \emph{sigmoid} or
-    \emph{logistic} function $\sigma$.}
+  \caption{Examples of computational graphs. The left graph performs the
+    operation $+$ on inputs $x$ and $y$ to produce $z$. The right graph computes
+    a logistic regression variable $\hat{y}$ for some example vector
+    $\mathbf{x}$, weight vector $\mathbf{w}$ and scalar bias $b$. As shown in
+    the graph, $\hat{y}$ is the result of the \emph{sigmoid} function $\sigma$.}
   \label{fig:graphs}
 \end{figure}
 
@@ -120,12 +117,10 @@ that may be declared in a TensorFlow graph.
     Value-producing operations & \texttt{Constant}, \texttt{Variable}
     \\
     Neural network units & \texttt{SoftMax}, \texttt{ReLU}, \texttt{Conv2D}
-    \\
-    Checkpoint operations & \texttt{Save}, \texttt{Restore}
     \\ \bottomrule
     \end{tabular}
-    \label{tab:ops}
     \caption{Examples for TensorFlow operations \cite{tensorflow}.}
+    \label{tab:ops}
 \end{table}
 
 Any operation must be backed by an associated implementation. In
@@ -188,47 +183,7 @@ second degree refers to the fact that on each machine, there may then be more
 than one device, such as, for example, five independent GPUs and/or three
 CPUs. For this reason, there exist two ``versions'' of TensorFlow, one for local
 execution on a single machine (but possibly many devices), and one supporting a
-\emph{distributed} implementation across many machines and many devices. Figure
-\ref{fig:exec} visualizes a possible distributed setup. While the initial
-release of TensorFlow supported only single-machine execution, the distributed
-version was open-sourced on April 13, 2016 \cite{tensorflowdist}.
-
-\begin{figure}
-  \begin{tikzpicture}
-    % Client
-    \draw [very thick] (0, 0) rectangle ++(1.25, 0.75) node [midway] {client};
-
-    % Master
-    \draw [very thick] (2.5, 0) rectangle ++(1.25, 0.75) node [midway] {master};
-    \draw [very thick, -stealth] (1.25, 0.375) -- (2.5, 0.375) node [midway,
-    above] {\texttt{run}};
-
-    % Worker 1
-    \draw [very thick] (5.25, 0.55) rectangle ++(2.75, 1.5);
-    \draw (6.75, 1.8) node {worker $A$};
-    \draw (5.45, 0.95) rectangle ++(1.1, 0.5) node [midway] {\small$GPU_0$};
-    \draw (6.75, 0.95) rectangle ++(1.1, 0.5) node [midway] {\small$CPU_0$};
-    \draw (6.65, 0.75) node {\large\dots};
-
-
-    % Worker 2
-    \draw [very thick] (5.25, -1.3) rectangle ++(2.75, 1.5);
-    \draw (6.75, -0.05) node {worker $B$};
-    \draw (5.45, -0.9) rectangle ++(1.1, 0.5) node [midway] {\small$CPU_0$};
-    \draw (6.75, -0.9) rectangle ++(1.1, 0.5) node [midway] {\small$CPU_1$};
-    \draw (6.65, -1.1) node {\large\dots};
-
-    % Edges
-    \draw [very thick, -stealth]
-          (3.75, 0.375) .. controls +(1, 0) and (4.2, 1.45) .. (5.25, 1.4);
-    \draw [very thick, -stealth]
-          (3.75, 0.375) .. controls +(1, 0) and (4.2, -0.55) .. (5.25, -0.5);
-
-  \end{tikzpicture}
-  \caption{A visualization of the different execution agents in a multi-machine,
-    multi-device hardware configuration.}
-  \label{fig:exec}
-\end{figure}
+\emph{distributed} implementation across many machines and many devices.
 
 \subsubsection{Devices}\label{sec:model-exec-devices}
 
@@ -270,8 +225,7 @@ which to place the node during execution:
 
 If the hardware configuration of the user's system provides more than one
 device, the placement algorithm will often distribute a graph's nodes among
-these devices. This can be seen as partitioning the set of nodes into classes,
-one per device. As a consequence, there may be cross-device dependencies between
+these devices. As a consequence, there may be cross-device dependencies between
 nodes that must be handled via a number of additional steps. Let us consider for
 this two devices $A$ and $B$ with particular focus on a node $\nu$ on device
 $A$. If $\nu$'s output tensor forms the input to some other operations
@@ -382,8 +336,8 @@ implementation of the back-propagation algorithm. Rather, special nodes are
 added to the computational graph that calculate the gradient of each operation
 and thus ultimately the chain rule. To perform back-propagation, these nodes
 must then simply be executed like any other nodes by the graph evaluation
-engine. As such, this approach does not produce the desired derivatives as a
-numeric value, but only as a \emph{symbolic handle} to compute those values.
+engine. As such, this approach does not produce the desired derivative as a
+numeric value, but only as a \emph{symbolic handle} to compute that value.
 
 When TensorFlow needs to compute the gradient of a particular node $\nu$ with
 respect to some other tensor $\alpha$, it traverses the graph in reverse order

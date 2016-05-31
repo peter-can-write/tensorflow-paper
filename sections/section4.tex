@@ -2,12 +2,11 @@
 
 Deep learning models often employ neural networks with a highly complex and
 intricate structure. For example, \cite{tensorflow} reports of a deep
-convolutional network based on the \emph{GoogleNet} model \cite{inception}, with
-more than 36,000 individual units, while \cite{tensorflow} states that certain
-long short-term memory (LSTM) architectures can span over 15,000
-nodes. \emph{TensorBoard}, a web interface for graph visualization built
-directly into TensorFlow, allows the user to maintain a clear overview of such
-complex structures and facilitates model debugging.
+convolutional network based on Google's \emph{Inception} model, with more than
+36,000 individual units \cite{inception}. \emph{TensorBoard}, a web interface
+for graph visualization built directly into TensorFlow, allows the user to
+maintain a clear overview of such complex structures and facilitates model
+debugging.
 
 The core feature of TensorBoard is its lucid visualization of computational
 graphs, exemplified in Figure \ref{fig:tensorboard-a}. Graphs with intricate
@@ -28,10 +27,7 @@ could, for example, observe the accuracy or loss of your model with
 time. Histogram summary nodes allow the user to track value
 \emph{distributions}, such as those of neural network weights or the final
 softmax estimates. Figures \ref{fig:tensorboard-c} and \ref{fig:tensorboard-d}
-give examples of scalar and histogram summaries, respectively. Lastly,
-TensorBoard also allows visualization of images. This can be useful to show the
-images sampled for each mini-batch of an image classification task, or to
-visualize the kernel filters learned for a convolutional neural network
+give examples of scalar and histogram summaries, respectively.
 \cite{tensorflow}.
 
 \begin{figure}[h!]
