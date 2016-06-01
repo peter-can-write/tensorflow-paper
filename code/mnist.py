@@ -53,7 +53,7 @@ with graph.as_default():
 
 with tf.Session(graph=graph) as session:
     tf.initialize_all_variables().run()
-    for step in range(1000):
+    for step in range(1001):
         example_batch, label_batch = mnist.train.next_batch(100)
         feed_dict = {examples: example_batch, labels: label_batch}
         if step % 100 == 0:
