@@ -5,21 +5,21 @@ principles underlying the TensorFlow software library. We begin with an
 examination of the basic structural and architectural decisions made by the
 TensorFlow development team. Thereafter, we study TensorFlow's local as well as
 distributed execution model. Lastly, we investigate how TensorFlow implements
-back-propagation, a crucial step for many machine learning algorithms.
+\emph{back-propagation}, a crucial step for many machine learning algorithms.
 
 \subsection{Computational Graph Architecture}\label{sec:model-graphs}
 
 In TensorFlow, machine learning algorithms are represented as
-\emph{computational graphs}. A computational or \emph{dataflow} graph is a form
-of directed graph where \emph{vertices} or \emph{nodes} describe operations,
-while \emph{edges} represent data flowing between these operations. If an output
-variable $z$ is the result of applying a binary operation to two inputs $x$ and
-$y$, then we draw directed edges from $x$ and $y$ to an output node representing
-$z$ and annotate the vertex with a label describing the performed
-computation. Examples for computational graphs are given in Figure
-\ref{fig:graphs}. The following paragraphs discuss the principle elements of
-such a dataflow graph, namely \emph{operations}, \emph{tensors},
-\emph{variables} and \emph{sessions}.
+\emph{computational graphs} \cite{tensorflow}. A computational or
+\emph{dataflow} graph is a form of directed graph where \emph{vertices} or
+\emph{nodes} describe operations, while \emph{edges} represent data flowing
+between these operations. If an output variable $z$ is the result of applying a
+binary operation to two inputs $x$ and $y$, then we draw directed edges from $x$
+and $y$ to an output node representing $z$ and annotate the vertex with a label
+describing the performed computation \cite{goodfellow2016}. Examples for
+computational graphs are given in Figure \ref{fig:graphs}. The following
+paragraphs discuss the principle elements of such a dataflow graph, namely
+\emph{operations}, \emph{tensors}, \emph{variables} and \emph{sessions}.
 
 \begin{figure}
   \begin{tikzpicture}
@@ -106,7 +106,7 @@ control flow directive, a file I/O operation or even a network communication
 port. Table \ref{tab:ops} gives an overview of different kinds of operations
 that may be declared in a TensorFlow graph.
 
-Any operation must be backed by an associated implementation. In
+Any operation must be backed by at least one associated implementation. In
 \cite{tensorflow} such an implementation is referred to as the operation's
 \emph{kernel}. A particular kernel is always specifically built for execution on
 a certain kind of device, such as a CPU, GPU or other hardware unit.
@@ -119,7 +119,7 @@ multi-dimensional collection of homogeneous values with a fixed, static type. In
 terms of the computational graph, a tensor can be seen as a \emph{symbolic
   handle} to one of the outputs of an operation. A tensor itself does not hold
 or store values in memory, but provides only an interface for retrieving the
-value referenced by the tensor.
+value referenced by the tensor \cite{tensorflow}.
 
 \subsubsection{Variables}\label{sec:model-graphs-vars}
 
@@ -129,7 +129,8 @@ maintain state across evaluations of a graph, such as for the weights and
 parameters of a neural network. For this purpose, there exist \emph{variables}
 in TensorFlow, which can be described as persistent, mutable handles to
 in-memory buffers storing tensors. To manipulate and update variables,
-TensorFlow provides the \texttt{assign} family of graph operations.
+TensorFlow provides the \texttt{assign} family of graph operations
+\cite{tensorflow}.
 
 \begin{table}[t!]
   \begin{tabular}{ll}
@@ -156,7 +157,7 @@ responsibilities of a session is to encapsulate the allocation and management of
 resources such as variable buffers. Moreover, the \texttt{Session} interface of
 the TensorFlow library provides a \texttt{run} routine, which is the primary
 entry point for executing parts or the entirety of a computational graph. This
-method takes as input the nodes in the graph whose tensors should be computed
+function takes as input the nodes in the graph whose tensors should be computed
 and returned. Moreover, an optional mapping from arbitrary nodes in the graph to
 respective replacement values --- referred to as \emph{feed nodes} --- may be
 supplied to \texttt{run} as well \cite{tensorflow}. Upon invocation of
@@ -175,15 +176,16 @@ graph via a \texttt{Session}'s \texttt{run} routine, this query is sent to the
 master process, which in turn delegates the task to one or more worker processes
 and coordinates their execution. Each worker is subsequently responsible for
 overseeing one or more devices, which are the physical processing units for
-which the kernels of an operation are implemented.
+which the kernels of an operation are implemented \cite{tensorflow}.
 
 Within this model, there are two degrees of scalability. The first degree
-pertains to scaling the number of machines on which a graph is executed. The
-second degree refers to the fact that on each machine, there may then be more
-than one device, such as, for example, two GPUs and/or three CPUs. For this
-reason, there exist two ``versions'' of TensorFlow, one for local execution on a
-single machine (but possibly many devices), and one supporting a
-\emph{distributed} implementation across many machines and many devices.
+pertains to scaling the number of machines on which a graph is executed.  The
+second degree refers to the number of devices on each machine, of which there
+may be more than one. For example, a single machine could host two GPUs and two
+CPUs, all executing in parallel. For this reason, there exist two ``versions''
+of TensorFlow, one for local execution on a single machine (but possibly many
+devices), and one supporting a \emph{distributed} implementation across many
+machines and many devices \cite{tensorflowdist}.
 
 \subsubsection{Devices}\label{sec:model-exec-devices}
 
@@ -193,9 +195,9 @@ eventually be mapped to an available device to be executed. In practice, a
 device will most often be either a CPU or a GPU. However, TensorFlow supports
 registration of further kinds of physical execution units by the user. For
 example, in May 2016, Google announced its \emph{Tensor Processing Unit} (TPU),
-a custom built ASIC optimized specifically for fast tensor computations
-\cite{tpu}. It is thus understandably easy to integrate new device classes as
-novel hardware emerges.
+a custom built ASIC (application-specific-integrated-circuit) optimized
+specifically for fast tensor computations \cite{tpu}. It is thus understandably
+easy to integrate new device classes as new hardware emerges.
 
 \subsubsection{Placement Algorithm}\label{sec:model-exec-placement}
 
@@ -226,10 +228,10 @@ which to place the node during execution:
 If the hardware configuration of the user's system provides more than one
 device, the placement algorithm will often distribute a graph's nodes among
 these devices. As a consequence, there may be cross-device dependencies between
-nodes that must be handled via a number of additional steps. Let us consider for
-this two devices $A$ and $B$ with particular focus on a node $\nu$ on device
-$A$. If $\nu$'s output tensor forms the input to some other operations
-$\alpha, \beta$ on device $B$, there conceptually exist cross-device edges
+nodes that must be handled via a number of additional steps. Let us consider two
+devices $A$ and $B$ with particular focus on a node $\nu$ on device $A$. If
+$\nu$'s output tensor forms the input to some other operations $\alpha, \beta$
+on device $B$, there conceptually exist cross-device edges
 $\nu \rightarrow \alpha$ and $\nu \rightarrow \beta$ from device $A$ to device
 $B$. This is visualized in Figure \ref{fig:cross-a}.
 
@@ -241,7 +243,8 @@ placed and connected to $\nu$. In tandem, on device $B$, a \texttt{recv} node is
 instantiated and attached to $\alpha$ and $\beta$. The \texttt{send} and
 \texttt{recv} nodes are then connected by an additional edge. This is shown in
 Figure \ref{fig:cross-b}. During execution of the graph, cross-device
-communication of data occurs exclusively via these special nodes.
+communication of data occurs exclusively via these special nodes
+\cite{tensorflow}.
 
 \begin{figure}
   \centering
@@ -319,19 +322,19 @@ communication of data occurs exclusively via these special nodes.
 \subsection{Back-Propagation in TensorFlow}\label{sec:model-ext-backprop}
 
 In a large number of deep learning and other machine learning algorithms, it is
-necessary to compute the gradients of particular nodes of the computational
-graph with respect to one or many other nodes. This is most often done via the
-\emph{back-propagation} algorithm, which implements the chain rule. In
-\cite{goodfellow2016}, two approaches for back-propagating gradients through a
-computational graph are described. The first, which the authors refer to as
-\emph{symbol-to-number differentiation}, receives a set of input values and then
-computes the \emph{numerical values} of the gradients at those input values. It
-does so by explicitly traversing the graph first in the forward order
-(forward-propagation) to compute the cost, then in reverse order
-(back-propagation) to compute the gradients. Another approach, more relevant to
-TensorFlow, is what \cite{goodfellow2016} calls \emph{symbol-to-symbol
-  derivatives} and \cite{tensorflow} terms \emph{automatic gradient
-  computation}. In this case, gradients are not computed by an explicit
+necessary to compute the gradients (derivatives) of particular nodes of the
+computational graph with respect to one or many other nodes. This is most often
+done via the \emph{back-propagation} algorithm, which implements the chain rule
+of differential calculus. In source \cite{goodfellow2016}, two approaches for
+back-propagating gradients through a computational graph are described. The
+first, which the authors refer to as \emph{symbol-to-number differentiation},
+receives a set of input values and then computes the \emph{numerical values} of
+the gradients at those input values. It does so by explicitly traversing the
+graph first in the forward order (forward-propagation) to compute the cost, then
+in reverse order (back-propagation) to compute the gradients. Another approach,
+more relevant to TensorFlow, is what \cite{goodfellow2016} calls
+\emph{symbol-to-symbol derivatives} and \cite{tensorflow} terms \emph{automatic
+  gradient computation}. In this case, gradients are not computed by an explicit
 implementation of the back-propagation algorithm. Rather, special nodes are
 added to the computational graph that calculate the gradient of each operation
 and thus ultimately the chain rule. To perform back-propagation, these nodes
@@ -349,8 +352,8 @@ for each such operation $o$ that takes the gradient of the previous ``link'' and
 multiplies it with its own gradient. At the end of the traversal, there will be
 a node providing a symbolic handle to the overall target derivative
 $\frac{d\nu}{d\alpha}$, which \emph{implicitly} implements the back-propagation
-algorithm. Figure \ref{fig:gradients} shows how a computational graph may look
-before and after gradient nodes are added.
+algorithm \cite{tensorflow}. Figure \ref{fig:gradients} shows how a
+computational graph may look before and after gradient nodes are added.
 
 \begin{figure}
   \centering

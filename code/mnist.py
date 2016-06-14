@@ -43,7 +43,8 @@ with graph.as_default():
 
     # Create a gradient-descent optimizer that minimizes the loss.
     # We choose a learning rate of 0.5
-    optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(loss)
+    gdo = tf.train.GradientDescentOptimizer(0.5)
+    optimizer = gdo.minimize(loss)
 
     # Find the indices where the predictions were correct
     correct_predictions = tf.equal(

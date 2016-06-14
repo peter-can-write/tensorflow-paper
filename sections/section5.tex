@@ -13,10 +13,9 @@ Facebook. The commit we reference\footnote{Commit hash:
 provides an extensive set of benchmarks for a variety of convolutional network
 models and many libraries. Inter alia, Chintala gives the forward and
 backward-propagation time of TensorFlow, Torch and Caffe for the AlexNet CNN
-model \cite{alexnet}. Theano is not included in these benchmarks. The outcomes
-show that TensorFlow performs second-best in both measures behind Torch, with
-Caffe lagging relatively far behind. We reproduce the relevant results in Table
-\ref{tab:convnet}.
+model \cite{alexnet}. Theano is not included in these benchmarks. As shown in
+Table \ref{tab:convnet}, TensorFlow performs second-best in both measures behind
+Torch, with Caffe lagging relatively far behind.
 
 \begin{table}
   \centering
@@ -36,16 +35,16 @@ Caffe lagging relatively far behind. We reproduce the relevant results in Table
   \label{tab:convnet}
 \end{table}
 
-Further benchmarks were published by the Theano development team in
-\cite{theano} on May 9, 2016. We focus on their results for an LSTM network
-operating on the Penn Treebank dataset \cite{penntreebank}. Their comparisons
-measure words processed per second for a small model consisting of a single
-200-unit hidden layer and a large model with two 650-unit hidden layers. Tested
-libraries include Theano, Torch and TensorFlow, but not Caffe. In their
-benchmarks, TensorFlow performs best among all three for the small model,
-followed by Theano and then Torch. For the large model, TensorFlow is placed
-second behind Theano, while Torch remains in last place. Table
-\ref{fig:theano-results} shows these outcomes.
+Further benchmarks were published by the Theano development team on May 9, 2016
+\cite{theano}. We focus on their results for an LSTM network operating on the
+Penn Treebank dataset \cite{penntreebank}. Their comparisons measure words
+processed per second for a small model consisting of a single 200-unit hidden
+layer and a large model with two 650-unit hidden layers. Tested libraries
+include Theano, Torch and TensorFlow, but not Caffe. In their benchmarks,
+TensorFlow performs best among all three for the small model, followed by Theano
+and then Torch. For the large model, TensorFlow is placed second behind Theano,
+while Torch remains in last place. Figure \ref{fig:theano-results} shows these
+outcomes.
 
 \begin{figure}
   \centering

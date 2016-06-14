@@ -39,9 +39,9 @@ with graph.as_default():
 We are now ready to populate our computational graph with operations. We begin
 by adding two \emph{placeholder} nodes \texttt{examples} and
 \texttt{labels}. Placeholders are special variables that \emph{must} be replaced
-with concrete tensors upon graph execution. That is, they must be supplied in
-the \texttt{feed\_dict} argument to \texttt{Session.run()}, mapping tensors to
-replacement values. For each such placeholder, we specify a shape and data
+with concrete tensors upon graph execution. This is done by supplying them as
+the \texttt{feed\_dict} argument to \texttt{Session.run()}, which maps tensors
+to replacement values. For each such placeholder, we specify a shape and data
 type. By specifying the keyword \texttt{None} for the first dimension of each
 placeholder shape, we can later feed a tensor of variable size in that
 dimension. For the column size of the \texttt{example} placeholder, we specify
@@ -105,12 +105,14 @@ gdo = tf.train.GradientDescentOptimizer(0.5)
 optimizer = gdo.minimize(loss)
 \end{lstlisting}
 %
-Finally, we can actually train our algorithm. For this, we enter a session
-environment using a \texttt{tf.Session} as a context manager. We pass our graph
-object to its constructor, so that it knows which graph to manage. To then
-execute nodes, we use \texttt{Session.run()} and pass a list of tensors we wish
-to compute. Before evaluating any other node, we must first initialize the
-variables in our graph. We do this by \texttt{run}ning the
+Finally, we can train our algorithm and attempt to learn the optimal parameters
+$\mathbf{W}$ and $\mathbf{b}$ that maximize the accuracy of our model's
+predictions. For this, we enter a session environment using a
+\texttt{tf.Session} as a context manager. We pass our graph object to its
+constructor, so that it knows which graph to manage. To then execute nodes, we
+use \texttt{Session.run()} and pass a list of tensors we wish to compute. Before
+evaluating any other node, we must first initialize the variables in our
+graph. We do this by \texttt{run}ning the
 \texttt{tf.initialize\_all\_variables()} utility operation. Then, we perform a
 certain number of iterations of stochastic gradient descent, fetching an example
 and label mini-batch from the MNIST dataset each time and feeding it to the
@@ -133,8 +135,8 @@ with tf.Session(graph=graph) as session:
 \end{lstlisting}
 %
 The full code listing for this example, along with some additional
-implementation to compute an accuracy metric at each time step, is given in
-Appendix \ref{app:code}.
+implementation to compute an accuracy metric at each time step, is given in the
+appendix.
 
 %%% Local Variables:
 %%% mode: latex
