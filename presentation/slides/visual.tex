@@ -1,12 +1,14 @@
 \begin{slide}{Visualization Tools}
   \begin{itemize}
-    \item Deep Neural Networks have the tendency of being \dots\, deep
-    \item Easy to drown in the complexity of an architecture
-    \item $>$ 36,000 nodes for Google's \emph{Inception} model
+    \item<2-> Deep Neural Networks have the tendency of being \dots\, deep
+    \item<3-> Easy to drown in the complexity of an architecture
+    \item<4-> $>$ 36,000 nodes for Google's \emph{Inception} model
   \end{itemize}
-  \begin{figure}
-    \includegraphics[scale=0.5, trim={0 50cm 0 0}, clip]{inception}
-  \end{figure}
+  \onslide<5->{
+    \begin{figure}
+      \includegraphics[scale=0.5, trim={0 50cm 0 0}, clip]{inception}
+    \end{figure}
+  }
 \end{slide}
 
 \begin{frame}
@@ -35,8 +37,10 @@
     \advance\leftskip-2.2cm
     \includegraphics[scale=0.5, trim={0 0 0 51.3cm}, clip]{inception}
 
+    \onslide<2->{
     \hspace{3cm}\includegraphics[scale=0.15]{gold}
     \vfill
+    }
   \end{figure}
   {\tiny Source: http://googleresearch.blogspot.de/2016/03/train-your-own-image-classifier-with.html}
 \end{frame}
