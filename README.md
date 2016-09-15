@@ -1,6 +1,6 @@
 # TensorFlow-Paper
 
-This is a WIP paper on TensorFlow.
+A review paper on TensorFlow, the coolest thing since sliced bread.
 
 ## 1. Introduction
 
